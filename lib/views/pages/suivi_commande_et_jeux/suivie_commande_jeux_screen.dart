@@ -3,9 +3,11 @@ import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/views/widgets/parametre/parametre_button.dart';
+import 'package:provider/provider.dart';
 
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import '../../../controllers/home_layout_controller.dart';
 import '../jeux_popup/choisir_jeu_screen.dart';
 
 class SuivieDeCommandeEtJeuxScreen extends StatefulWidget {
@@ -48,6 +50,17 @@ class _SuivieDeCommandeEtJeuxScreenState
               ),
             ),
             const SizedBox(height: 30),
+            Padding(
+              padding: EdgeInsets.only(left: 10.w),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: BackButton(
+                  onPressed: () {
+                    context.read<HomeLayoutController>().switchScreen(0);
+                  },
+                ),
+              ),
+            ),
             SizedBox(
               width: MediaQuery.sizeOf(context).width * 0.8,
               child: Card(

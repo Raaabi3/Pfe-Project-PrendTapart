@@ -5,7 +5,10 @@ import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/views/pages/historique/commande_screen.dart';
 import 'package:menu_digitale_tablette/views/widgets/history/commande_widget.dart';
 import 'package:menu_digitale_tablette/views/widgets/parametre/parametre_button.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import '../../../controllers/home_layout_controller.dart';
 
 class PlanDeTableScreen extends StatefulWidget {
   const PlanDeTableScreen({super.key});
@@ -63,7 +66,13 @@ class _PlanDeTableScreenState extends State<PlanDeTableScreen> {
                         padding: const EdgeInsets.all(10),
                         child: Row(
                           children: [
-                            const BackButton(),
+                            BackButton(
+                              onPressed: () {
+                                context
+                                    .read<HomeLayoutController>()
+                                    .switchScreen(0);
+                              },
+                            ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
