@@ -1,7 +1,7 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_digitale_tablette/services/professional/professional_service.dart';
-import 'package:menu_digitale_tablette/helpers/providers/professional_provider.dart';
-
+import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
+import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -14,30 +14,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-
   void _register() async {
     final firstName = firstNameController.text;
     final lastName = lastNameController.text;
     final email = emailController.text;
     final password = passwordController.text;
     ProfessionalProvider _provider = ProfessionalProvider();
-    final result = await _provider.register(firstName, lastName, email, password);
-
+    final result =
+        await _provider.register(firstName, lastName, email, password);
+    final snackBar = SnackBar(
+      content: AwesomeSnackbarContent(
+        title: 'Failed to Register!',
+        message: "Check teh credentials",
+        contentType: ContentType.success,
+      ),
+    );
     result.fold(
       (error) {
-        // Handle registration failure
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registration failed: $error')));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       },
       (data) {
         // Handle registration success
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Registration successful')));
-        _provider.firstname=firstName;
-        _provider.lastname=lastName;
-        _provider.email=email;
-        _provider.password=password;
-        _provider.token=data['token'].toString();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Registration successful')));
+
+        _provider.token = data['token'].toString();
         print(_provider.token);
-        },
+      },
     );
   }
 

@@ -1,6 +1,7 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_digitale_tablette/helpers/providers/professional_provider.dart';
-import 'package:menu_digitale_tablette/services/professional/professional_service.dart';
+import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
+import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
 import 'package:menu_digitale_tablette/views/pages/register/register_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,10 +13,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final ProfessionalProvider _provider = ProfessionalProvider();
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +39,20 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    final result = await _provider.login(emailController.text,passwordController.text
+                    final snackBar = SnackBar(
+                      content: AwesomeSnackbarContent(
+                        title: 'Failed to login!',
+                        message: "User dosn't exist",
+                        contentType: ContentType.success,
+                      ),
                     );
+                    final result = await _provider.login(
+                        emailController.text, passwordController.text);
 
                     result.fold(
-                      (error) => print('Error: $error'),
+                      (error) =>ScaffoldMessenger.of(context).showSnackBar(snackBar),
                       (data) {
-                        _provider.email=emailController.text;
-                        _provider.password=passwordController.text;
-                        _provider.token=data['token'].toString();
+                        _provider.token = data['token'].toString();
                         print(_provider.token);
                       },
                     );
@@ -59,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    
                     // Navigate to the register page
                     Navigator.push(
                       context,
