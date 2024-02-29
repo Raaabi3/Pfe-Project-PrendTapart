@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/controllers/sondage_controller.dart';
 import 'package:menu_digitale_tablette/controllers/theme_controller.dart';
+import 'package:menu_digitale_tablette/helpers/providers/professional_provider.dart';
 import 'package:menu_digitale_tablette/views/pages/layout_screen/layout_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -23,11 +25,12 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => HomeLayoutController()),
           ChangeNotifierProvider(create: (_) => SondageController()),
           ChangeNotifierProvider(create: (_) => ThemeController()),
+          ChangeNotifierProvider(create: (_) => ProfessionalProvider())
         ],
         child: MaterialApp(
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
-          home: const LayoutScreen(),
+          home:  LoginPage(),
         ),
       ),
     );

@@ -42,10 +42,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    final professionalService = ProfessionalService();
-                    final result = await professionalService.login(
-                      emailController.text,
-                      passwordController.text,
+                    final result = await _provider.login(emailController.text,passwordController.text
                     );
 
                     result.fold(
@@ -54,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                         _provider.email=emailController.text;
                         _provider.password=passwordController.text;
                         _provider.token=data['token'].toString();
+                        print(_provider.token);
                       },
                     );
                   },

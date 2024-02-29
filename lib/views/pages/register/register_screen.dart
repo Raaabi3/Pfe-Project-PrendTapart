@@ -13,7 +13,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  ProfessionalService _professionalService = ProfessionalService();
 
 
   void _register() async {
@@ -21,9 +20,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     final lastName = lastNameController.text;
     final email = emailController.text;
     final password = passwordController.text;
-    final result = await _professionalService.register(firstName, lastName, email, password);
-    final ProfessionalProvider _provider = ProfessionalProvider();
-
+    ProfessionalProvider _provider = ProfessionalProvider();
+    final result = await _provider.register(firstName, lastName, email, password);
 
     result.fold(
       (error) {
