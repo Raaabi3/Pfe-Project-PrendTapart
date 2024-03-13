@@ -1,8 +1,10 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
-import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
+import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/register/register_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,10 +14,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final ProfessionalProvider _provider = ProfessionalProvider();
+  
 
   @override
   Widget build(BuildContext context) {
+final ProfessionalProvider _provider = Provider.of<ProfessionalProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
@@ -39,6 +42,9 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
+                    final SharedPreferences prefs = await SharedPreferences.getInstance();
+                    await prefs.setString('action', 'Start');
+
                     final snackBar = SnackBar(
                       content: AwesomeSnackbarContent(
                         title: 'Failed to login!',
@@ -48,14 +54,20 @@ class _LoginPageState extends State<LoginPage> {
                     );
                     final result = await _provider.login(
                         emailController.text, passwordController.text);
-
                     result.fold(
                       (error) =>ScaffoldMessenger.of(context).showSnackBar(snackBar),
                       (data) {
-                        _provider.token = data['token'].toString();
-                        print(_provider.token);
+                        _provider.updateToken(data['token'].toString());
+                        Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeScreen()),
+                    );
                       },
                     );
+
+                    await prefs.setString('Token', _provider.token);
+
                   },
                   child: Text('Login'),
                 ),

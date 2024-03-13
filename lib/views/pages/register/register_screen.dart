@@ -1,6 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
 import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
 
 class RegistrationPage extends StatefulWidget {

@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
 import 'package:menu_digitale_tablette/views/pages/historique/history_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/code_de_securite_popup.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/information_resto_popup_.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/parametre_de_table_popup.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/theme_popup.dart';
-
+import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
 import 'package:menu_digitale_tablette/views/widgets/parametre/parametre_item.dart';
 import 'package:provider/provider.dart';
 
@@ -23,18 +24,22 @@ class _ParametreScreenState extends State<ParametreScreen> {
     "Paramétres générales",
     "Historique",
     "Théme",
-    "Besoin d’aide"
+    "Besoin d’aide",
+    "logout"
   ];
   List itemsIcons = [
     "assets/icons/historique-icon.png",
     "assets/icons/historique-icon.png",
     "assets/icons/theme-icon.png",
-    "assets/icons/question-mark-icon.png"
+    "assets/icons/question-mark-icon.png",
+    "assets/icons/logout.png"
   ];
   bool parametreGeneraleSelected = false;
 
   @override
   Widget build(BuildContext context) {
+    final ProfessionalProvider _provider =
+        Provider.of<ProfessionalProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: [
@@ -119,6 +124,17 @@ class _ParametreScreenState extends State<ParametreScreen> {
                       showDialog(
                           context: context,
                           builder: (context) => const ParametreThemePopUp());
+                    } else if (index == 4) {
+                      _provider.logout().then((result) {
+                        if (result.isRight) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => LoginPage(),
+                          );
+                        } else {
+                          print(result.left);
+                        }
+                      });
                     }
                   },
                   text: itemsNames[index],

@@ -21,18 +21,19 @@ import 'package:http/http.dart' as http;
 
       final response = await http.get(
         headers: {
-          'Authorization': 'Bearer {$token}',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
         Uri.parse('http://127.0.0.1:8000/api/profile'),
       );
         return response;
       }
-       Future<http.Response> logoutS(String token) async {
 
+
+       Future<http.Response> logoutS(token) async {
       final response = await http.post(
         headers: {
-          'Authorization': 'Bearer {$token}',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
         Uri.parse('http://127.0.0.1:8000/api/logout'),
