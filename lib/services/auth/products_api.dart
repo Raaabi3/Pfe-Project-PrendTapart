@@ -1,13 +1,13 @@
 import 'package:http/http.dart' as http;
 
-Future<http.Response> fetchListProductS(String token ,int establishmentid  ) async {
+Future<http.Response> fetchListProductS(String token ,int id  ) async {
 
       final response = await http.get(
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        Uri.parse('http://127.0.0.1:8000/api/establishments/$establishmentid/products'),
+        Uri.parse('http://127.0.0.1:8000/api/establishments/$id/products'),
       );
         return response;
       }

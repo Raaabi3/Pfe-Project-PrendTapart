@@ -31,7 +31,7 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                   subtitle: Text(
                       'Quantity: ${provider.establishments[index].zipCode}'),
                   onTap: () {
-                    prod_provider.getProducts();
+                    prod_provider.getProducts(provider.establishments[index].id);
                   },
                 );
               },

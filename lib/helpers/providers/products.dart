@@ -11,17 +11,15 @@ class Productprovider extends ChangeNotifier {
   final EstablishmentProvider establishmentProvider;
   Productprovider(this.establishmentProvider);
   String token = ProfessionalProvider().token;
-  //int establishmentid = EstablishmentProvider().id;
-  int establishmentid = 99543;
-  int productid = 243;
+  //int establishmentid = 99557;
+  //int productid = 243;
   List<Product> products = [];
   
-  Future<Either<String, List<Product>>> getProducts() async {
+  Future<Either<String, List<Product>>> getProducts(id) async {
     try {
-      Response response = await fetchListProductS(establishmentProvider.professionalProvider.token, establishmentid);
+      Response response = await fetchListProductS(establishmentProvider.professionalProvider.token, id);
       if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        if (jsonData is List) {
+        final List<dynamic>  jsonData = jsonDecode(response.body);
           List<Product> newProducts = [];
           for (var productData in jsonData) {
             Product product = Product.fromJson(productData);
@@ -30,10 +28,6 @@ class Productprovider extends ChangeNotifier {
           products = newProducts;
           notifyListeners();
           return Right(products);
-        } else {
-          print("Invalid JSON data: $jsonData");
-          return Left('Invalid JSON data');
-        }
       } else {
         print("Request failed with status: ${response.statusCode}");
         return Left('Unauthorized user');
