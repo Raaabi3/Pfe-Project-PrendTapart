@@ -8,43 +8,17 @@ import 'package:menu_digitale_tablette/models/product_model.dart';
 import 'package:menu_digitale_tablette/services/auth/products_api.dart';
 
 class Productprovider extends ChangeNotifier {
+  final EstablishmentProvider establishmentProvider;
+  Productprovider(this.establishmentProvider);
   String token = ProfessionalProvider().token;
   //int establishmentid = EstablishmentProvider().id;
   int establishmentid = 99543;
   int productid = 243;
   List<Product> products = [];
-  Product product = Product(
-      id: 0,
-      name: "",
-      desc: "",
-      hasImage: false,
-      sourceLink: "",
-      aLair: "",
-      img: "",
-      imgCover: "",
-      auFrigo: false,
-      astucePreparation: "",
-      good: "",
-      bad: "",
-      advice: "",
-      nutritionGrades: "",
-      nutriscoreScore: 0,
-      ingredients: "",
-      codeCiqual: "",
-      codeBar: "",
-      originsLc: "",
-      isVerified: false,
-      ingredientImg: "",
-      marque: "",
-      origin: "",
-      adresse: "",
-      qte: 0,
-      hasCover: false,
-      professionalId: 0);
-
+  
   Future<Either<String, List<Product>>> getProducts() async {
     try {
-      Response response = await fetchListProductS(token, establishmentid);
+      Response response = await fetchListProductS(establishmentProvider.professionalProvider.token, establishmentid);
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         if (jsonData is List) {
@@ -70,6 +44,7 @@ class Productprovider extends ChangeNotifier {
     }
   }
 
+/*
   Future<Either<String, Product>> getProductDetails() async {
   try {
     Response response = await fetchProductS(token, establishmentid, productid);
@@ -89,5 +64,5 @@ class Productprovider extends ChangeNotifier {
     return Left('Error: $e');
   }
 }
-
+*/
 }

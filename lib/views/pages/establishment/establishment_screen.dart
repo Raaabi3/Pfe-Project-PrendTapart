@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/helpers/providers/establishment.dart';
+import 'package:menu_digitale_tablette/helpers/providers/products.dart';
 import 'package:provider/provider.dart';
 
 class EstablishmentsScreen extends StatefulWidget {
@@ -10,6 +11,8 @@ class EstablishmentsScreen extends StatefulWidget {
 class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
   @override
   Widget build(BuildContext context) {
+    final Productprovider prod_provider = Provider.of<Productprovider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('List Screen'),
@@ -17,7 +20,7 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
       body: Consumer<EstablishmentProvider>(
         builder: (context, provider, _) {
           if (provider.establishments.isEmpty) {
-            provider.getEstablishments(); 
+            provider.getEstablishments();
             return Center(child: CircularProgressIndicator());
           } else {
             return ListView.builder(
@@ -25,8 +28,10 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(provider.establishments[index].id.toString()),
-                  subtitle: Text('Quantity: ${provider.establishments[index].zipCode}'),
+                  subtitle: Text(
+                      'Quantity: ${provider.establishments[index].zipCode}'),
                   onTap: () {
+                    prod_provider.getProducts();
                   },
                 );
               },

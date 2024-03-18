@@ -7,7 +7,7 @@ Future<http.Response> fetchListProductS(String token ,int establishmentid  ) asy
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        Uri.parse('http://127.0.0.1:8000/establishments/$establishmentid/products'),
+        Uri.parse('http://127.0.0.1:8000/api/establishments/$establishmentid/products'),
       );
         return response;
       }

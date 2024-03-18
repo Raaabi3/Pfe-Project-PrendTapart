@@ -5,7 +5,7 @@ class ProfessionalModel {
   String firstname;
   String lastname;
   String email;
-  DateTime email_verified_at;
+  DateTime? email_verified_at; // Making this nullable
   String password;
   String remember_token;
   int current_team_id;
@@ -18,11 +18,8 @@ class ProfessionalModel {
   String fcm_token;
   DateTime created_at;
   DateTime updated_at;
+
   ProfessionalModel({
-    required this.firstname,
-    required this.lastname,
-    required this.email,
-    required this.email_verified_at,
     required this.password,
     required this.remember_token,
     required this.current_team_id,
@@ -35,6 +32,9 @@ class ProfessionalModel {
     required this.fcm_token,
     required this.created_at,
     required this.updated_at,
+    this.firstname = "", // Default value provided here
+    this.lastname = "", // Default value provided here
+    this.email = "", DateTime? email_verified_at, // Default value provided here
   });
 
   Map<String, dynamic> toMap() {
@@ -42,7 +42,7 @@ class ProfessionalModel {
       'firstname': firstname,
       'lastname': lastname,
       'email': email,
-      'email_verified_at': email_verified_at.millisecondsSinceEpoch,
+      'email_verified_at': email_verified_at?.millisecondsSinceEpoch, // Check for nullability
       'password': password,
       'remember_token': remember_token,
       'current_team_id': current_team_id,
@@ -63,7 +63,9 @@ class ProfessionalModel {
       firstname: map['firstname'] as String,
       lastname: map['lastname'] as String,
       email: map['email'] as String,
-      email_verified_at: DateTime.fromMillisecondsSinceEpoch(map['email_verified_at'] as int),
+      email_verified_at: map['email_verified_at'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['email_verified_at'] as int)
+          : null,
       password: map['password'] as String,
       remember_token: map['remember_token'] as String,
       current_team_id: map['current_team_id'] as int,
@@ -81,5 +83,6 @@ class ProfessionalModel {
 
   String toJson() => json.encode(toMap());
 
-  factory ProfessionalModel.fromJson(String source) => ProfessionalModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ProfessionalModel.fromJson(String source) =>
+      ProfessionalModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

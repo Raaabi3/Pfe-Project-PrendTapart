@@ -17,8 +17,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Productprovider _provider = Provider.of<Productprovider>(context);
-    _provider.getProductDetails();
+
     return Scaffold(
       bottomNavigationBar: Container(
         height: 12.h,

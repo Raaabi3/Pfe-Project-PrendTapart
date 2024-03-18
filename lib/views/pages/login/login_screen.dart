@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
+import 'package:menu_digitale_tablette/helpers/providers/establishment.dart';
 import 'package:menu_digitale_tablette/models/establishment_model/Establishment_model.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
@@ -20,6 +21,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
 final ProfessionalProvider _provider = Provider.of<ProfessionalProvider>(context);
+final EstablishmentProvider estab_provider = Provider.of<EstablishmentProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),

@@ -9,14 +9,16 @@ import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
 
 class ProfessionalProvider extends ChangeNotifier {
   late String token = "";
-  int professionalId=0;
+  //int professionalId=0;
   List<ProfessionalModel> professional = [];
   late BuildContext context; 
 
+/*
 void getid(int id) {
 professionalId = id;
 notifyListeners();
 }
+*/
 void updateToken(String newToken) {
 token = newToken;
 notifyListeners();
@@ -32,7 +34,6 @@ void setContext(BuildContext _context) {
   try {
         if (response.statusCode == 201) {
         final jsonData = jsonDecode(response.body);
-        fetchprofessional(token);
         return Right(jsonData);
       } else {
         return Left('registeration failed');
@@ -58,14 +59,14 @@ void setContext(BuildContext _context) {
 }
 
   
-  Future<Either<String, String>> fetchprofessional(token) async {
+  Future<Either<String, int>> fetchprofessional(token) async {
   Response response = await fetchprofessionalS(token);
   try {
     print("fetching prof :"+response.statusCode.toString());
-        if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-        getid(jsonData['id']);
-        return Right(jsonData);
+//        getid(jsonData['id']);
+        return Right(jsonData['id']);
       } else {
         return Left('unauthorised user');
       }

@@ -39,7 +39,14 @@ class MyApp extends StatelessWidget {
               return EstablishmentProvider(professionalProvider);
             },
           ),
-          ChangeNotifierProvider(create: (_) => Productprovider())
+          ChangeNotifierProvider(
+            create: (context) {
+              final establishmentProvider = Provider.of<EstablishmentProvider>(context, listen: false);
+              return Productprovider(establishmentProvider);
+            },
+          ),
+          //ChangeNotifierProvider(create: (_) => Productprovider(),
+
         ],
         child: MaterialApp(
           title: 'Flutter Demo',
