@@ -11,6 +11,8 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $table = 'products';
+
     protected $fillable = [
         'name',
         'desc',
@@ -41,7 +43,7 @@ class Product extends Model
     ];
     public function establishmentProducts()
     {
-        return $this->hasMany(EstablishmentProduct::class);
+        return $this->hasMany(EstablishmentProduct::class, 'product_id');
     }
 }
 

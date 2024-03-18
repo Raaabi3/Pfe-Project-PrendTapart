@@ -27,6 +27,9 @@ Route::middleware('auth:sanctum')->prefix('professionals')->group(function () {
 });
 Route::middleware('auth:sanctum')->prefix('establishments')->group(function () {
     Route::get('/{establishments_id}/products', [EstablishmentProductsController ::class,'getProducts']);
+
+
+
 });
 
 Route::post('/login', [AuthController::class, 'login']);

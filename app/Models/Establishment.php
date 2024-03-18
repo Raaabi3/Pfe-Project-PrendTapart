@@ -52,6 +52,10 @@ class Establishment extends Model
     {
         return $this->company->professionals();
     }
+    public function professionalRoles()
+    {
+        return $this->hasMany(ProfessionalRoleInEstablishment::class, 'establishment_id');
+    }
     public function roles(){
         return $this->hasMany(Roles::class);
     }
