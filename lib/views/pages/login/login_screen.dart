@@ -1,8 +1,9 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
+import 'package:menu_digitale_tablette/models/establishment_model/Establishment_model.dart';
+import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/register/register_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,11 +58,12 @@ final ProfessionalProvider _provider = Provider.of<ProfessionalProvider>(context
                     result.fold(
                       (error) =>ScaffoldMessenger.of(context).showSnackBar(snackBar),
                       (data) {
+                        
                         _provider.updateToken(data['token'].toString());
                         Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HomeScreen()),
+                          builder: (context) => EstablishmentsScreen()),
                     );
                       },
                     );
@@ -71,17 +73,7 @@ final ProfessionalProvider _provider = Provider.of<ProfessionalProvider>(context
                   },
                   child: Text('Login'),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the register page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RegistrationPage()),
-                    );
-                  },
-                  child: Text('Go to Register'),
-                ),
+                
               ],
             ),
           ],

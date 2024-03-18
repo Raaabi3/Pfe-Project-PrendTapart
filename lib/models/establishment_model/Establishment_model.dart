@@ -1,4 +1,6 @@
+
 class Establishment {
+  final int id;
   final String name;
   final String address;
   final String city;
@@ -25,6 +27,7 @@ class Establishment {
   final String contentArticle;
 
   Establishment({
+    required this.id,
     required this.name,
     this.address = '',
     this.city = '',
@@ -53,6 +56,7 @@ class Establishment {
 
   factory Establishment.fromJson(Map<String, dynamic> json) {
     return Establishment(
+      id: json['id'] ?? 0,
       name: json['name'] ?? '',
       address: json['address'] ?? '',
       city: json['city'] ?? '',

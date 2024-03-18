@@ -9,14 +9,8 @@ import 'package:http/http.dart' as http;
       );
         return response;
       }
-      Future<http.Response> registerS(String name,String surname ,String email, String password) async {
 
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/register'),
-        body: {'first_name':name,'last_name':surname,'email': email, 'password': password},
-      );
-        return response;
-      }
+      
       Future<http.Response> fetchprofessionalS(String token) async {
 
       final response = await http.get(
@@ -24,7 +18,7 @@ import 'package:http/http.dart' as http;
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        Uri.parse('http://127.0.0.1:8000/api/profile'),
+        Uri.parse('http://127.0.0.1:8000/api/professionals/profile'),
       );
         return response;
       }

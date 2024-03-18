@@ -8,29 +8,26 @@ import 'package:http/http.dart';
 import 'package:menu_digitale_tablette/services/auth/establishment_api..dart';
 
 class EstablishmentProvider extends ChangeNotifier {
-  int id = 12;
-  String token = ProfessionalProvider().token;
+  final ProfessionalProvider professionalProvider;
+  EstablishmentProvider(this.professionalProvider);
+
   List<Establishment> establishments = [];
 
   Future<Either<String, List<Establishment>>> getEstablishments() async {
   try {
-    Response response = await fetchEstablishmentS(token, id);
+    print("the id is "+professionalProvider.professionalId.toString());
+    Response response = await fetchEstablishmentS(professionalProvider.token, professionalProvider.professionalId);
     if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      if (jsonData is List) {
-        List<Establishment> newEstablishments = [];
-        for (var establishmentData in jsonData) {
-          Establishment establishment = Establishment.fromJson(establishmentData);
-          newEstablishments.add(establishment);
-        }
-        establishments = newEstablishments;
-        notifyListeners(); 
-        return Right(establishments);
-      } else {
-        print("Invalid JSON data: $jsonData");
-        return Left('Invalid JSON data');
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      List<Establishment> newEstablishments = [];
+      for (var establishmentData in jsonData) {
+        Establishment establishment = Establishment.fromJson(establishmentData);
+        newEstablishments.add(establishment);
       }
-    } else {
+      establishments = newEstablishments;
+      notifyListeners(); 
+      return Right(establishments);
+      } else {
       print("Request failed with status: ${response.statusCode}");
       return Left('unauthorized user');
     }

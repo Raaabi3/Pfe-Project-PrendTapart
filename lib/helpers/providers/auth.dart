@@ -9,7 +9,7 @@ import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
 
 class ProfessionalProvider extends ChangeNotifier {
   late String token = "";
-  int professionalId=12;
+  int professionalId=0;
   List<ProfessionalModel> professional = [];
   late BuildContext context; 
 
@@ -20,29 +20,19 @@ notifyListeners();
 void updateToken(String newToken) {
 token = newToken;
 notifyListeners();
+print(token);
 }
 void setContext(BuildContext _context) {
   context = _context;
 }
-Future<Either<String, Map<String, dynamic>>> register(String name,String surname ,String email, String password) async {
-  Response response = await registerS(name, surname, email, password);
-  try {
-        if (response.statusCode == 201) {
-        final jsonData = jsonDecode(response.body);
-        return Right(jsonData);
-      } else {
-        return Left('registeration failed');
-      }
-    } catch (e) {
-      return Left('Error: $e');
-    }
-  }
+
   
   Future<Either<String, Map<String, dynamic>>> login(String email, String password) async {
   Response response = await loginS(email, password);
   try {
         if (response.statusCode == 201) {
         final jsonData = jsonDecode(response.body);
+        fetchprofessional(token);
         return Right(jsonData);
       } else {
         return Left('registeration failed');
@@ -57,7 +47,7 @@ Future<Either<String, Map<String, dynamic>>> register(String name,String surname
   print(response.body);
   try {
     if (response.statusCode == 200) {
-      updateToken(''); // Update the token to an empty value
+      updateToken('');
       return Right("logout succ");
     } else {
       return Left('logout failed');
@@ -71,9 +61,10 @@ Future<Either<String, Map<String, dynamic>>> register(String name,String surname
   Future<Either<String, String>> fetchprofessional(token) async {
   Response response = await fetchprofessionalS(token);
   try {
+    print("fetching prof :"+response.statusCode.toString());
         if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
-        //professionalId = jsonData['id'];
+        getid(jsonData['id']);
         return Right(jsonData);
       } else {
         return Left('unauthorised user');

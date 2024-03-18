@@ -24,7 +24,7 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
               itemCount: provider.establishments.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(provider.establishments[index].name),
+                  title: Text(provider.establishments[index].id.toString()),
                   subtitle: Text('Quantity: ${provider.establishments[index].zipCode}'),
                   onTap: () {
                   },

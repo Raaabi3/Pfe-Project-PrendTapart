@@ -3,7 +3,9 @@ import 'package:menu_digitale_tablette/controllers/sondage_controller.dart';
 import 'package:menu_digitale_tablette/controllers/theme_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
 import 'package:menu_digitale_tablette/helpers/providers/establishment.dart';
+import 'package:menu_digitale_tablette/helpers/providers/products.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/layout_screen/layout_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
@@ -30,12 +32,19 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => SondageController()),
           ChangeNotifierProvider(create: (_) => ThemeController()),
           ChangeNotifierProvider(create: (_) => ProfessionalProvider()),
-          ChangeNotifierProvider(create: (_) => EstablishmentProvider())
+          //ChangeNotifierProvider(create: (_) => EstablishmentProvider()),
+          ChangeNotifierProvider(
+            create: (context) {
+              final professionalProvider = Provider.of<ProfessionalProvider>(context, listen: false);
+              return EstablishmentProvider(professionalProvider);
+            },
+          ),
+          ChangeNotifierProvider(create: (_) => Productprovider())
         ],
         child: MaterialApp(
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
-          home:  EstablishmentsScreen(),
+          home:  LoginPage(),
         ),
       ),
     );
