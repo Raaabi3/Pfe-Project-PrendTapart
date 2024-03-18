@@ -8,6 +8,9 @@ class EstablishmentProduct extends Model
 {
     use HasFactory;
 
+    protected $table = 'establishment_product';
+
+
     protected $fillable = [
         'establishment_id',
         'product_id',

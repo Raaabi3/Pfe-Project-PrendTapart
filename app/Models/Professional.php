@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\PrefessionalRoleInEstablishment;
 
 
 class Professional extends Authenticatable
@@ -37,16 +38,28 @@ class Professional extends Authenticatable
         'password',
         'remember_token',
     ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function company()
+    {
+        return $this->hasOne(Companies::class, 'owner_id');
+    }
+    public function professionalRolesInEstablishment()
+    {
+        return $this->hasMany(ProfessionalRoleInEstablishment::class, 'professional_id');
+    }
+
+
+
+    public function roles()
+    {
+        return $this->belongsToMany(Roles::class, 'professional_roles_in_establishment', 'professional_id', 'role_id');
+
+    }
+
 
 }
 

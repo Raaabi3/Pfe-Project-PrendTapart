@@ -12,27 +12,6 @@ use App\Models\Professional;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
-    {
-//auth peut etre
-        $request->validate([
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:professionals,email',
-            'password' => 'required|min:6',
-        ]);
-
-        $professional = Professional::create([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-        ]);
-        $token = $professional->createToken('auth_token')->plainTextToken;
-        return response()->json(['token' => $token], 201);
-    }
-
-
     // Login
     public function login(Request $request)
     {
