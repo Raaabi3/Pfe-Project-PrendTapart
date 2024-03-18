@@ -16,22 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfessionalController extends Controller
 {
-
-    public function getEstablishments($professional_id)
-    {
-        $establishments = Professional::with('company.establishments')->findOrFail($professional_id)->company->establishments;
-        return response()->json($establishments);
-    }
-    /*
-    public function getProfessionalsRole($professionalId)
-    {
-        $professional = Professional::with('professionalRolesInEstablishment.role.establishment')
-            ->findOrFail($professionalId);
-
-        return response()->json($professional);
-    }
-    */
-    public function getProfessionalsRole($professionalId)
+    public function getProfessionalsbyRole($professionalId)
     {
         $establishment = Professional::with('professionalRolesInEstablishment.role.establishment')
             ->findOrFail($professionalId)->professionalRolesInEstablishment->map(function ($role) {
