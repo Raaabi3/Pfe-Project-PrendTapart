@@ -280,7 +280,7 @@ class HomeScreen extends StatelessWidget {
                           behavior: HitTestBehavior.translucent,
                           onTap: () {
                             SideSheet.left(
-                              body: ProduitScreen(),
+                              body: ProduitScreen(product :prodProvider.products[index]),
                               context: context,
                             );
                           },

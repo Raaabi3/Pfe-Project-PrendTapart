@@ -43,7 +43,7 @@ class ProductCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: AutoSizeText(
-                          product.name, // Corrected usage here
+                          product.name,
                           maxLines: 1,
                           style: subhead.copyWith(fontWeight: FontWeight.w600),
                         ),

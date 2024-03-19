@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
+import 'package:menu_digitale_tablette/models/product_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ProduitScreen extends StatelessWidget {
-  ProduitScreen({super.key});
+  final Product product;
+  ProduitScreen({Key? key, required this.product}) : super(key: key);
   int tailleSelected = 0;
   int sauceSelected = 0;
   int boissonSelected = 0;
@@ -20,7 +22,7 @@ class ProduitScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "12,99€",
+                product.priceByUnit.toString(),
                 style: headline,
               ),
               Row(
@@ -69,8 +71,8 @@ class ProduitScreen extends StatelessWidget {
         child: Column(
           children: [
             Image.network(
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ90r0U3WBtjgE8NqfaLSVxks5-skqqNQfGfA&usqp=CAU",
-              fit: BoxFit.fill,
+              product.img,
+                            fit: BoxFit.fill,
               height: 30.h,
               width: double.infinity,
             ),
@@ -83,15 +85,15 @@ class ProduitScreen extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    "Tacos au polet",
+                    product.name,
                     style: headline,
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    "Les fameux morceaux de banane plantain frits. Servis avec une sauce tomate au piment doux et tamarin - Vegan et Sans gluten",
-                    style: body,
+                    product.description,
+                                        style: body,
                   ),
                   const SizedBox(
                     height: 15,
