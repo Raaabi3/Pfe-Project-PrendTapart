@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/helpers/providers/establishment.dart';
 import 'package:menu_digitale_tablette/helpers/providers/products.dart';
+import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
 class EstablishmentsScreen extends StatefulWidget {
@@ -32,6 +33,11 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                       'Quantity: ${provider.establishments[index].zipCode}'),
                   onTap: () {
                     prod_provider.getProducts(provider.establishments[index].id);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomeScreen()),
+                    );
                   },
                 );
               },

@@ -4,6 +4,7 @@ import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/products.dart';
+import 'package:menu_digitale_tablette/models/product_model.dart';
 import 'package:menu_digitale_tablette/views/pages/panier/panier_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/parametre_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/produit/produit_screen.dart';
@@ -13,11 +14,12 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:side_sheet/side_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
-
+    final Productprovider prodProvider = Provider.of<Productprovider>(context);
+    
     return Scaffold(
       bottomNavigationBar: Container(
         height: 12.h,
@@ -38,22 +40,28 @@ class HomeScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       SideSheet.right(
-                          body: const PanierScreen(),
-                          context: context,
-                          width: MediaQuery.sizeOf(context).width * 0.5);
+                        body: const PanierScreen(),
+                        context: context,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: const Color(0xffF4F4F4)),
+                        borderRadius: BorderRadius.circular(8),
+                        color: const Color(0xffF4F4F4),
+                      ),
                       child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 8),
-                          child: Text(
-                            "4 produits",
-                            style: subhead.copyWith(
-                                color: const Color(0xff616161)),
-                          )),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 8,
+                        ),
+                        child: Text(
+                          "4 produits",
+                          style: subhead.copyWith(
+                            color: const Color(0xff616161),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -62,51 +70,50 @@ class HomeScreen extends StatelessWidget {
                 width: 20,
               ),
               Expanded(
-                  child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    ...List.generate(
-                        3,
-                        (index) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child: Row(
-                                children: [
-                                  Image.network(
-                                    "https://d2j6dbq0eux0bg.cloudfront.net/images/51235197/2146084191.jpg",
-                                    fit: BoxFit.fill,
-                                    height: 60,
-                                    width: 50,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(
+                      3,
+                      (index) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          children: [
+                            Image.network(
+                              "https://d2j6dbq0eux0bg.cloudfront.net/images/51235197/2146084191.jpg",
+                              fit: BoxFit.fill,
+                              height: 60,
+                              width: 50,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Tacos au polet",
+                                  style: body,
+                                ),
+                                const SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  "12,99€",
+                                  style: subhead.copyWith(
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Tacos au polet",
-                                        style: body,
-                                      ),
-                                      const SizedBox(
-                                        height: 3,
-                                      ),
-                                      Text(
-                                        "12,99€",
-                                        style: subhead.copyWith(
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ))
-                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ))
+              ),
             ],
           ),
         ),
@@ -159,7 +166,9 @@ class HomeScreen extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     SideSheet.right(
-                        body: const ParametreScreen(), context: context);
+                      body: const ParametreScreen(),
+                      context: context,
+                    );
                   },
                   child: CircleAvatar(
                     radius: 15,
@@ -182,108 +191,113 @@ class HomeScreen extends StatelessWidget {
                     height: 20,
                   ),
                   GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 140,
-                              crossAxisSpacing: 50,
-                              mainAxisExtent: 50,
-                              mainAxisSpacing: 10),
-                      itemCount: 8,
-                      itemBuilder: (BuildContext ctx, index) {
-                        return Consumer<HomeLayoutController>(
-                            builder: (context, value, child) => GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    value.switchFoodTypeIndex(index);
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Petits kiff",
-                                            style: subhead.copyWith(
-                                                fontWeight:
-                                                    value.currentFoodTypeIndex ==
-                                                            index
-                                                        ? null
-                                                        : FontWeight.w400),
-                                          ),
-                                          const Text("  🥰")
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Visibility(
-                                        visible:
-                                            value.currentFoodTypeIndex == index,
-                                        child: Container(
-                                          height: 4,
-                                          width: 140,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: pinkColor),
-                                        ),
-                                      )
-                                    ],
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 140,
+                      crossAxisSpacing: 50,
+                      mainAxisExtent: 50,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: 8,
+                    itemBuilder: (BuildContext ctx, index) {
+                      return Consumer<HomeLayoutController>(
+                        builder: (context, value, child) => GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            value.switchFoodTypeIndex(index);
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Petits kiff",
+                                    style: subhead.copyWith(
+                                      fontWeight: value.currentFoodTypeIndex ==
+                                              index
+                                          ? null
+                                          : FontWeight.w400,
+                                    ),
                                   ),
-                                ));
-                      }),
+                                  const Text("  🥰")
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Visibility(
+                                visible: value.currentFoodTypeIndex == index,
+                                child: Container(
+                                  height: 4,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: pinkColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: const Color(0xffFFECE6)),
+                      borderRadius: BorderRadius.circular(30),
+                      color: const Color(0xffFFECE6),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(14),
                       child: Center(
-                          child: Text(
-                        "Découvrire notre Petits Kiff",
-                        style: headline.copyWith(color: pinkColor),
-                      )),
+                        child: Text(
+                          "Découvrire notre Petits Kiff",
+                          style: headline.copyWith(color: pinkColor),
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
                     child: GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.85,
-                          crossAxisCount: 3,
-                        ),
-                        itemCount: 8,
-                        itemBuilder: (BuildContext ctx, index) {
-                          return Consumer<HomeLayoutController>(
-                              builder: (context, value, child) =>
-                                  GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      onTap: () {
-                                        SideSheet.left(
-                                            body: ProduitScreen(),
-                                            context: context);
-                                      },
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: ProductCard(),
-                                      )));
-                        }),
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 0.85,
+                        crossAxisCount: 3,
+                      ),
+                      itemCount: prodProvider.products.length,
+                      itemBuilder: (BuildContext ctx, index) {
+                        return GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            SideSheet.left(
+                              body: ProduitScreen(),
+                              context: context,
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ProductCard(
+                              product: prodProvider.products[index],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

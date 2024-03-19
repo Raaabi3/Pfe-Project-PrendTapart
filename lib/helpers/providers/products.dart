@@ -11,23 +11,23 @@ class Productprovider extends ChangeNotifier {
   final EstablishmentProvider establishmentProvider;
   Productprovider(this.establishmentProvider);
   String token = ProfessionalProvider().token;
-  //int establishmentid = 99557;
+  int establishmentid = 99569;
   //int productid = 243;
   List<Product> products = [];
   
-  Future<Either<String, List<Product>>> getProducts(id) async {
+  Future<Either<String, List<Product>>> getProducts(int id) async {
     try {
-      Response response = await fetchListProductS(establishmentProvider.professionalProvider.token, id);
+      Response response = await fetchListProductS(establishmentProvider.professionalProvider.token, establishmentid);
+      print("the response"+response.statusCode.toString());
       if (response.statusCode == 200) {
-        final List<dynamic>  jsonData = jsonDecode(response.body);
-          List<Product> newProducts = [];
-          for (var productData in jsonData) {
-            Product product = Product.fromJson(productData);
-            newProducts.add(product);
-          }
-          products = newProducts;
-          notifyListeners();
-          return Right(products);
+        final List<dynamic> jsonData = jsonDecode(response.body);
+        for (var productData in jsonData) {
+          Product product = Product.fromJson(productData);
+          products.add(product);
+        }
+        print(products.length.toString());
+        notifyListeners();
+        return Right(products);
       } else {
         print("Request failed with status: ${response.statusCode}");
         return Left('Unauthorized user');

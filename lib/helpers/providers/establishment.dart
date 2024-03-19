@@ -5,7 +5,6 @@ import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
 import 'package:menu_digitale_tablette/models/establishment_model/Establishment_model.dart';
 import 'package:http/http.dart';
 import 'package:menu_digitale_tablette/services/auth/establishment_api..dart';
-import 'package:provider/provider.dart';
 
 class EstablishmentProvider extends ChangeNotifier {
   final ProfessionalProvider professionalProvider;
@@ -27,13 +26,10 @@ class EstablishmentProvider extends ChangeNotifier {
             print(response.statusCode.toString()+"with id $professionalId and teh token is"+professionalProvider.token);
             if (response.statusCode == 200) {
               final List<dynamic> jsonData = jsonDecode(response.body);
-              List<Establishment> newEstablishments = [];
               for (var establishmentData in jsonData) {
-                Establishment establishment =
-                    Establishment.fromJson(establishmentData);
-                newEstablishments.add(establishment);
+                Establishment establishment = Establishment.fromJson(establishmentData);
+                establishments.add(establishment);
               }
-              establishments = newEstablishments;
               notifyListeners();
               return Right(establishments);
             } else {

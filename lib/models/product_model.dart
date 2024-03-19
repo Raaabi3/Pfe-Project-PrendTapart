@@ -1,91 +1,91 @@
 class Product {
   final int id;
   final String name;
-  final String desc;
-  final bool hasImage;
-  final String sourceLink;
-  final String aLair;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int establishmentId;
+  final int productId;
+  final String unit;
+  final double priceByUnit;
+  final String location;
+  final int stockQuantity;
+  final DateTime dlc;
+  final String ref;
   final String img;
-  final String imgCover;
-  final bool auFrigo;
-  final String astucePreparation;
-  final String good;
-  final String bad;
-  final String advice;
-  final String nutritionGrades;
-  final int nutriscoreScore;
-  final String ingredients;
-  final String codeCiqual;
-  final String codeBar;
-  final String originsLc;
-  final bool isVerified;
-  final String ingredientImg;
-  final String marque;
-  final String origin;
-  final String adresse;
-  final int qte;
-  final bool hasCover;
-  final int professionalId;
+  final bool isRec;
+  final bool isIng;
+  final bool showHome;
+  final String description;
+  final bool autoUpgradeShoppingList;
+  final int minimumQuantityToOrder;
+  final int maximumQuantityToOrder;
+  final int promotionId;
+  final int digitalMenuRayonId;
+  final double poids;
+  final int establishmentTvaId;
+  final int recetteId;
+  final int establishmentProductRecId;
+  final int qteForOneRec;
 
   Product({
     required this.id,
     required this.name,
-    required this.desc,
-    required this.hasImage,
-    required this.sourceLink,
-    required this.aLair,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.establishmentId,
+    required this.productId,
+    required this.unit,
+    required this.priceByUnit,
+    required this.location,
+    required this.stockQuantity,
+    required this.dlc,
+    required this.ref,
     required this.img,
-    required this.imgCover,
-    required this.auFrigo,
-    required this.astucePreparation,
-    required this.good,
-    required this.bad,
-    required this.advice,
-    required this.nutritionGrades,
-    required this.nutriscoreScore,
-    required this.ingredients,
-    required this.codeCiqual,
-    required this.codeBar,
-    required this.originsLc,
-    required this.isVerified,
-    required this.ingredientImg,
-    required this.marque,
-    required this.origin,
-    required this.adresse,
-    required this.qte,
-    required this.hasCover,
-    required this.professionalId,
+    required this.isRec,
+    required this.isIng,
+    required this.showHome,
+    required this.description,
+    required this.autoUpgradeShoppingList,
+    required this.minimumQuantityToOrder,
+    required this.maximumQuantityToOrder,
+    required this.promotionId,
+    required this.digitalMenuRayonId,
+    required this.poids,
+    required this.establishmentTvaId,
+    required this.recetteId,
+    required this.establishmentProductRecId,
+    required this.qteForOneRec,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      desc: json['desc'] ?? '',
-      hasImage: json['hasImage'] ?? false,
-      sourceLink: json['source_link'] ?? '',
-      aLair: json['a_lair'] ?? '',
+      name: json['name'] ??0,
+      createdAt: DateTime.parse(json['created_at'] ?? ''),
+      updatedAt: DateTime.parse(json['updated_at'] ?? ''),
+      establishmentId: json['establishment_id'] ?? 0,
+      productId: json['product_id'] ?? 0,
+      unit: json['unit'] ?? '',
+      priceByUnit: json['price_by_unit'] != null ? double.parse(json['price_by_unit'].toString()) : 0.0,
+      location: json['location'] ?? '',
+      stockQuantity: json['stock_quantity'] != null ? int.parse(json['stock_quantity'].toString()) : 0,
+      dlc: json['dlc'] != null ? DateTime.parse(json['dlc'] ?? '') : DateTime.now(),
+      ref: json['ref'] ?? '',
       img: json['img'] ?? '',
-      imgCover: json['img_cover'] ?? '',
-      auFrigo: json['au_frigo'] ?? false,
-      astucePreparation: json['astuce_preparation'] ?? '',
-      good: json['good'] ?? '',
-      bad: json['bad'] ?? '',
-      advice: json['advice'] ?? '',
-      nutritionGrades: json['nutrition_grades'] ?? '',
-      nutriscoreScore: json['nutriscore_score'] ?? 0,
-      ingredients: json['ingredients'] ?? '',
-      codeCiqual: json['code_ciqual'] ?? '',
-      codeBar: json['code_bar'] ?? '',
-      originsLc: json['origins_lc'] ?? '',
-      isVerified: json['is_verified'] ?? false,
-      ingredientImg: json['ingredient_img'] ?? '',
-      marque: json['marque'] ?? '',
-      origin: json['origin'] ?? '',
-      adresse: json['adresse'] ?? '',
-      qte: json['qte'] ?? 0,
-      hasCover: json['hasCover'] ?? false,
-      professionalId: json['professional_id'] ?? 0,
+      isRec: json['is_rec'] != null ? json['is_rec'] == 1 : false,
+      isIng: json['is_ing'] != null ? json['is_ing'] == 1 : false,
+      showHome: json['show_home'] != null ? json['show_home'] == 1 : false,
+      description: json['description'] ?? '',
+      autoUpgradeShoppingList: json['auto_upgrade_shopping_list'] != null ? json['auto_upgrade_shopping_list'] == 1 : false,
+      minimumQuantityToOrder: json['minimum_quantity_to_order'] ?? 0,
+      maximumQuantityToOrder: json['maximum_quantity_to_order'] ?? 0,
+      promotionId: json['promotion_id'] ?? 0,
+      digitalMenuRayonId: json['digital_menu_rayon_id'] ?? 0,
+      poids: json['poids'] != null ? double.parse(json['poids'].toString()) : 0.0,
+      establishmentTvaId: json['establishment_tva_id'] ?? 0,
+      recetteId: json['recette_id'] ?? 0,
+      establishmentProductRecId: json['establishment_product_rec_id'] ?? 0,
+      qteForOneRec: json['qte_for_one_rec'] ?? 0,
     );
   }
 }
