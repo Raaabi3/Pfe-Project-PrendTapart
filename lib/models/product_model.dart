@@ -26,6 +26,7 @@ class Product {
   final int recetteId;
   final int establishmentProductRecId;
   final int qteForOneRec;
+  final List<Map<String, dynamic>> establishmentProducts; // Include establishment_products here
 
   Product({
     required this.id,
@@ -55,6 +56,7 @@ class Product {
     required this.recetteId,
     required this.establishmentProductRecId,
     required this.qteForOneRec,
+    required this.establishmentProducts, // Include establishment_products here
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -86,6 +88,7 @@ class Product {
       recetteId: json['recette_id'] ?? 0,
       establishmentProductRecId: json['establishment_product_rec_id'] ?? 0,
       qteForOneRec: json['qte_for_one_rec'] ?? 0,
+      establishmentProducts: json['establishment_products'] != null ? List<Map<String, dynamic>>.from(json['establishment_products']) : [],
     );
   }
 }

@@ -10,8 +10,13 @@ class EstablishmentsScreen extends StatefulWidget {
 }
 
 class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
-  @override
-  Widget build(BuildContext context) {
+@override
+  void initState() {
+    super.initState();
+    Provider.of<EstablishmentProvider>(context, listen: false).getEstablishments();
+  }
+  
+    Widget build(BuildContext context) {
     final Productprovider prod_provider = Provider.of<Productprovider>(context);
 
     return Scaffold(
@@ -21,7 +26,6 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
       body: Consumer<EstablishmentProvider>(
         builder: (context, provider, _) {
           if (provider.establishments.isEmpty) {
-            provider.getEstablishments();
             return Center(child: CircularProgressIndicator());
           } else {
             return ListView.builder(

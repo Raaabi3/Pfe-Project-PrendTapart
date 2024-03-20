@@ -4,13 +4,20 @@ import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/models/product_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ProduitScreen extends StatelessWidget {
+class ProduitScreen extends StatefulWidget {
   final Product product;
   ProduitScreen({Key? key, required this.product}) : super(key: key);
+
+    @override
+  _ProduitScreenState createState() => _ProduitScreenState();
+}
+  class _ProduitScreenState extends State<ProduitScreen> {
   int tailleSelected = 0;
   int sauceSelected = 0;
   int boissonSelected = 0;
-  @override
+  int qte =1;
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
@@ -18,11 +25,11 @@ class ProduitScreen extends StatelessWidget {
         height: 10.h,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
+           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                product.priceByUnit.toString(),
+                widget.product.priceByUnit.toString(),
                 style: headline,
               ),
               Row(
@@ -31,11 +38,19 @@ class ProduitScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: const Color(0xff3A3244)),
-                    child: const Padding(
-                      padding: EdgeInsets.all(6),
+                    child: GestureDetector(
+                      onTap: () {
+if (qte < /*widget.product.maximumQuantityToOrder*/ 4){
+                        setState(() {
+                          qte++;
+                          print(widget.product.id);
+                        });
+                        }
+                        
+                      },
                       child: Icon(
                         Icons.add,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -43,7 +58,7 @@ class ProduitScreen extends StatelessWidget {
                     width: 8,
                   ),
                   Text(
-                    "1",
+                    qte.toString(),
                     style: subhead,
                   ),
                   const SizedBox(
@@ -53,11 +68,15 @@ class ProduitScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         color: const Color(0xff3A3244)),
-                    child: const Padding(
-                      padding: EdgeInsets.all(6),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          qte--;
+                        });
+                      },
                       child: Icon(
                         Icons.remove,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -71,7 +90,7 @@ class ProduitScreen extends StatelessWidget {
         child: Column(
           children: [
             Image.network(
-              product.img,
+              widget.product.img,
                             fit: BoxFit.fill,
               height: 30.h,
               width: double.infinity,
@@ -85,14 +104,14 @@ class ProduitScreen extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    product.name,
+                    widget.product.name,
                     style: headline,
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    product.description,
+                    widget.product.description,
                                         style: body,
                   ),
                   const SizedBox(
