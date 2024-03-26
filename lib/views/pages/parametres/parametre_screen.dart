@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
+import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/historique/history_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/code_de_securite_popup.dart';
@@ -25,14 +26,17 @@ class _ParametreScreenState extends State<ParametreScreen> {
     "Historique",
     "Théme",
     "Besoin d’aide",
-    "logout"
+    "Logout",
+    "Boutique"
   ];
   List itemsIcons = [
     "assets/icons/historique-icon.png",
     "assets/icons/historique-icon.png",
     "assets/icons/theme-icon.png",
     "assets/icons/question-mark-icon.png",
+    "assets/icons/logout.png",
     "assets/icons/logout.png"
+
   ];
   bool parametreGeneraleSelected = false;
 
@@ -75,8 +79,8 @@ class _ParametreScreenState extends State<ParametreScreen> {
                     "Cocuisinage",
                     style: body.copyWith(color: Colors.white),
                   ),
-                  const SizedBox(width: 5),
-                  ...List.generate(5,
+                  const SizedBox(width: 6),
+                  ...List.generate(6,
                       (index) => const Icon(Icons.star, color: Colors.yellow))
                 ]),
                 const SizedBox(height: 15),
@@ -135,7 +139,13 @@ class _ParametreScreenState extends State<ParametreScreen> {
                           print(result.left);
                         }
                       });
-                    }
+                    }else if (index == 5) {
+                          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EstablishmentsScreen()),
+                    );
+                        }
                   },
                   text: itemsNames[index],
                   iconPath: itemsIcons[index]),

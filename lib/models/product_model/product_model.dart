@@ -1,6 +1,7 @@
 class Product {
   final int id;
   final String name;
+  final List<Map<String, dynamic>> establishmentProducts; 
   final DateTime createdAt;
   final DateTime updatedAt;
   final int establishmentId;
@@ -26,11 +27,13 @@ class Product {
   final int recetteId;
   final int establishmentProductRecId;
   final int qteForOneRec;
-  final List<Map<String, dynamic>> establishmentProducts; // Include establishment_products here
+  //
+  //final double price_by_unit;
 
   Product({
     required this.id,
     required this.name,
+    required this.establishmentProducts,
     required this.createdAt,
     required this.updatedAt,
     required this.establishmentId,
@@ -56,7 +59,8 @@ class Product {
     required this.recetteId,
     required this.establishmentProductRecId,
     required this.qteForOneRec,
-    required this.establishmentProducts, // Include establishment_products here
+    //
+    //required this.price_by_unit,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -68,16 +72,15 @@ class Product {
       establishmentId: json['establishment_id'] ?? 0,
       productId: json['product_id'] ?? 0,
       unit: json['unit'] ?? '',
-      priceByUnit: json['price_by_unit'] != null ? double.parse(json['price_by_unit'].toString()) : 0.0,
       location: json['location'] ?? '',
-      stockQuantity: json['stock_quantity'] != null ? int.parse(json['stock_quantity'].toString()) : 0,
+      stockQuantity: int.parse(json['establishment_products'][0]['stock_quantity']) ,
       dlc: json['dlc'] != null ? DateTime.parse(json['dlc'] ?? '') : DateTime.now(),
       ref: json['ref'] ?? '',
       img: json['img'] ?? '',
       isRec: json['is_rec'] != null ? json['is_rec'] == 1 : false,
       isIng: json['is_ing'] != null ? json['is_ing'] == 1 : false,
       showHome: json['show_home'] != null ? json['show_home'] == 1 : false,
-      description: json['description'] ?? '',
+      description: json['desc'] ?? '',
       autoUpgradeShoppingList: json['auto_upgrade_shopping_list'] != null ? json['auto_upgrade_shopping_list'] == 1 : false,
       minimumQuantityToOrder: json['minimum_quantity_to_order'] ?? 0,
       maximumQuantityToOrder: json['maximum_quantity_to_order'] ?? 0,
@@ -89,6 +92,27 @@ class Product {
       establishmentProductRecId: json['establishment_product_rec_id'] ?? 0,
       qteForOneRec: json['qte_for_one_rec'] ?? 0,
       establishmentProducts: json['establishment_products'] != null ? List<Map<String, dynamic>>.from(json['establishment_products']) : [],
+     // 
+priceByUnit: json['establishment_products'][0]['price_by_unit'],
+      //priceByUnit: json['price_by_unit'] != null ? double.parse(json['establishment_products'][0]['price_by_unit'].toString()) : 0.0,
+
+    
     );
+    /*establishmentProductId: json['establishment_products'] != null
+          ? json['establishment_products'][0]['id'] ?? 0
+          : 0,*/
+    
   }
+  
+
+  double getPriceByUnit(int ProductId) {
+  if (establishmentProducts.isNotEmpty) {
+    var product = establishmentProducts.first;
+    if (product['product_id'] == ProductId) {
+      return product['price_by_unit'] != null ? double.parse(product['price_by_unit'].toString()) : 0.0;
+    }
+  }
+  return 6.9;
+}
+
 }

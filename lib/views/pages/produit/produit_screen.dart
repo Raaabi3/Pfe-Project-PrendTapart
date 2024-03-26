@@ -1,35 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
-import 'package:menu_digitale_tablette/models/product_model.dart';
+import 'package:menu_digitale_tablette/helpers/providers/products.dart';
+import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ProduitScreen extends StatefulWidget {
   final Product product;
-  ProduitScreen({Key? key, required this.product}) : super(key: key);
+  ProduitScreen({Key? key, required this.product }) : super(key: key);
 
-    @override
+  @override
   _ProduitScreenState createState() => _ProduitScreenState();
 }
-  class _ProduitScreenState extends State<ProduitScreen> {
+
+class _ProduitScreenState extends State<ProduitScreen> {
   int tailleSelected = 0;
   int sauceSelected = 0;
   int boissonSelected = 0;
-  int qte =1;
-
+  int qte = 1;
+  
 
   Widget build(BuildContext context) {
+     final Productprovider prod_provider = Provider.of<Productprovider>(context);
+
     return Scaffold(
       bottomNavigationBar: Container(
         color: const Color(0xffFBF7FF),
         height: 10.h,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-           child: Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.product.priceByUnit.toString(),
+                widget.product.priceByUnit.toString() + "€",
                 style: headline,
               ),
               Row(
@@ -40,13 +45,11 @@ class ProduitScreen extends StatefulWidget {
                         color: const Color(0xff3A3244)),
                     child: GestureDetector(
                       onTap: () {
-if (qte < /*widget.product.maximumQuantityToOrder*/ 4){
-                        setState(() {
-                          qte++;
-                          print(widget.product.id);
-                        });
+                        if (qte < widget.product.stockQuantity) {
+                          setState(() {
+                            qte++;
+                          });
                         }
-                        
                       },
                       child: Icon(
                         Icons.add,
@@ -87,11 +90,12 @@ if (qte < /*widget.product.maximumQuantityToOrder*/ 4){
         ),
       ),
       body: SingleChildScrollView(
+        
         child: Column(
           children: [
             Image.network(
               widget.product.img,
-                            fit: BoxFit.fill,
+              fit: BoxFit.fill,
               height: 30.h,
               width: double.infinity,
             ),
@@ -112,7 +116,7 @@ if (qte < /*widget.product.maximumQuantityToOrder*/ 4){
                   ),
                   Text(
                     widget.product.description,
-                                        style: body,
+                    style: body,
                   ),
                   const SizedBox(
                     height: 15,
@@ -132,9 +136,11 @@ if (qte < /*widget.product.maximumQuantityToOrder*/ 4){
                     height: 10,
                   ),
                   StatefulBuilder(
+                    
                     builder: (context, setState) => SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
+                        
                         children: [
                           ...List.generate(
                               3,
@@ -162,7 +168,7 @@ if (qte < /*widget.product.maximumQuantityToOrder*/ 4){
                                           child: Row(
                                             children: [
                                               Text(
-                                                "Petit",
+                                                prod_provider.productsize[index].name.toString(),
                                                 style: body.copyWith(
                                                     fontWeight: FontWeight.w500,
                                                     color:
@@ -182,7 +188,7 @@ if (qte < /*widget.product.maximumQuantityToOrder*/ 4){
                                                 width: 5,
                                               ),
                                               Text(
-                                                "Gratuit",
+                                                prod_provider.productsize[index].price.toString()+"€",
                                                 style: body.copyWith(
                                                     fontWeight: FontWeight.w500,
                                                     color:

@@ -63,11 +63,16 @@ final EstablishmentProvider estab_provider = Provider.of<EstablishmentProvider>(
                       (data) {
                         
                         _provider.updateToken(data['token'].toString());
+    Provider.of<EstablishmentProvider>(context, listen: false).getEstablishments();
+
                         Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => EstablishmentsScreen()),
                     );
+                    //Provider.of<EstablishmentProvider>(context, listen: false).getEstablishments();
+
+
                       },
                     );
 

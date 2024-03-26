@@ -4,28 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
 import 'package:http/http.dart';
 import 'package:menu_digitale_tablette/helpers/providers/establishment.dart';
-import 'package:menu_digitale_tablette/models/product_model.dart';
+import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
+import 'package:menu_digitale_tablette/models/product_model/product_size_model.dart';
 import 'package:menu_digitale_tablette/services/auth/products_api.dart';
 
 class Productprovider extends ChangeNotifier {
-  final EstablishmentProvider establishmentProvider;
+  EstablishmentProvider establishmentProvider;
   Productprovider(this.establishmentProvider);
   String token = ProfessionalProvider().token;
   int establishmentid = 99569;
   //int productid = 243;
   List<Product> products = [];
-  
-  Future<Either<String, List<Product>>> getProducts(int id) async {
+  List<ProductSize> productsize = [];
+  List<Map<String, dynamic>> establishmentProducts = [];
+
+  Future<Either<String, List<Product>>> getProducts(id) async {
     try {
-      Response response = await fetchListProductS(establishmentProvider.professionalProvider.token, establishmentid);
-      print("the response"+response.statusCode.toString());
+      Response response = await fetchListProductS(
+          establishmentProvider.professionalProvider.token, id);
+      print("the response" + response.statusCode.toString());
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
         for (var productData in jsonData) {
-          Product product = Product.fromJson(productData);
-          products.add(product);
+          products.add(Product.fromJson(productData));
         }
-        print(products.length.toString());
         notifyListeners();
         return Right(products);
       } else {
@@ -38,25 +40,31 @@ class Productprovider extends ChangeNotifier {
     }
   }
 
-/*
-  Future<Either<String, Product>> getProductDetails() async {
-  try {
-    Response response = await fetchProductS(token, establishmentid, productid);
-    if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      print("err");
-      product = Product.fromJson(jsonData);
-      print(product);
-      notifyListeners();
-      return Right(product);
-    } else {
-      print("Request failed with status: ${response.statusCode}");
-      return Left('Unauthorized user');
+  Future<Either<String, List<ProductSize>>> fetchProductSize(int id) async {
+    try {
+      Response response = await fetchProductSizeS(
+          establishmentProvider.professionalProvider.token, id);
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = jsonDecode(response.body);
+        for (var productsizeData in jsonData) {
+          ProductSize size = ProductSize.fromJson(productsizeData);
+          productsize.add(size);
+        }
+
+        notifyListeners();
+        return Right(productsize);
+      } else {
+        return Left('Unauthorized user');
+      }
+    } catch (e) {
+      return Left('Error: $e');
     }
-  } catch (e) {
-    print('Error while fetching product details: $e');
-    return Left('Error: $e');
   }
-}
-*/
+  void updateProducts() {
+    products.clear();
+                  print("products is emptied");
+
+    notifyListeners();
+  }
+
 }

@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:menu_digitale_tablette/models/professional_model/professional_model.dart';
 import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
 
+
 class ProfessionalProvider extends ChangeNotifier {
   late String token = "";
   //int professionalId=0;

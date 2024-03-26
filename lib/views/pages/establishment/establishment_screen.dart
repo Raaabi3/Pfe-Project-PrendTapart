@@ -11,11 +11,12 @@ class EstablishmentsScreen extends StatefulWidget {
 
 class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
 @override
+/*
   void initState() {
     super.initState();
     Provider.of<EstablishmentProvider>(context, listen: false).getEstablishments();
   }
-  
+  */
     Widget build(BuildContext context) {
     final Productprovider prod_provider = Provider.of<Productprovider>(context);
 

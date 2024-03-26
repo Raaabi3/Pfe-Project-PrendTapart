@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/helpers/providers/products.dart';
-import 'package:menu_digitale_tablette/models/product_model.dart';
+import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
 import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
@@ -11,7 +11,6 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("the link image is " + product.img);
     return Card(
       elevation: 0.5,
       color: Colors.white,
