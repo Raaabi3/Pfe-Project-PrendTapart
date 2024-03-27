@@ -4,29 +4,25 @@ import 'dart:convert';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:menu_digitale_tablette/models/establishment_model/Establishment_model.dart';
 import 'package:menu_digitale_tablette/models/professional_model/professional_model.dart';
 import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
 
 
-class ProfessionalProvider extends ChangeNotifier {
-  late String token = "";
-  //int professionalId=0;
-  List<ProfessionalModel> professional = [];
-  late BuildContext context; 
 
-/*
-void getid(int id) {
-professionalId = id;
-notifyListeners();
-}
-*/
+class Auth extends ChangeNotifier {
+  late String token = "";
+  List<ProfessionalModel> professional = [];
+  Establishment selectedestablishment=Establishment(id: 0, name: "", showHome: 0);
+
 void updateToken(String newToken) {
 token = newToken;
 notifyListeners();
-print(token);
 }
-void setContext(BuildContext _context) {
-  context = _context;
+
+void setselectedestablishment(newselectedestablishment){
+  selectedestablishment=newselectedestablishment;
+  notifyListeners();
 }
 
   

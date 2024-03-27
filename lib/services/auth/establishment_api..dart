@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:menu_digitale_tablette/helpers/providers/ApiLinks.dart';
 
 Future<http.Response> fetchEstablishmentS(token ) async {
 
@@ -7,7 +8,7 @@ Future<http.Response> fetchEstablishmentS(token ) async {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        Uri.parse('http://127.0.0.1:8000/api/professionals/establishments'),
+        Uri.parse(ApiLinks.getEstablishments),
       );
         return response;
       }

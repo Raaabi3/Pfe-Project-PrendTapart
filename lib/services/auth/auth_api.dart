@@ -1,10 +1,11 @@
 
 import 'package:http/http.dart' as http;
+import 'package:menu_digitale_tablette/helpers/providers/ApiLinks.dart';
 
         
       Future<http.Response> loginS(String email, String password) async {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/login'),
+        Uri.parse(ApiLinks.login),
         body: {'email': email, 'password': password},
       );
         return response;
@@ -30,7 +31,7 @@ import 'package:http/http.dart' as http;
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        Uri.parse('http://127.0.0.1:8000/api/logout'),
+        Uri.parse(ApiLinks.logout),
       );
         return response;
       }

@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:menu_digitale_tablette/helpers/providers/ApiLinks.dart';
 
 Future<http.Response> fetchListProductS(String token ,int id  ) async {
 
@@ -7,7 +8,7 @@ Future<http.Response> fetchListProductS(String token ,int id  ) async {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        Uri.parse('http://127.0.0.1:8000/api/establishments/$id/products'),
+        Uri.parse(ApiLinks.getProducts(id)),
       );
         return response;
       }
@@ -19,7 +20,7 @@ Future<http.Response> fetchProductSizeS(String token ,int id  ) async {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        Uri.parse('http://127.0.0.1:8000/api/establishments/$id/size'),
+        Uri.parse(ApiLinks.getProductsSize(id)),
       );
         return response;
       }

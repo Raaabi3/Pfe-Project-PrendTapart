@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
-import 'package:menu_digitale_tablette/helpers/providers/products.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -22,7 +22,7 @@ class _ProduitScreenState extends State<ProduitScreen> {
   
 
   Widget build(BuildContext context) {
-     final Productprovider prod_provider = Provider.of<Productprovider>(context);
+     final Products prod_provider = Provider.of<Products>(context);
 
     return Scaffold(
       bottomNavigationBar: Container(

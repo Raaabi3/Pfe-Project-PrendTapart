@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/controllers/sondage_controller.dart';
 import 'package:menu_digitale_tablette/controllers/theme_controller.dart';
-import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
-import 'package:menu_digitale_tablette/helpers/providers/establishment.dart';
-import 'package:menu_digitale_tablette/helpers/providers/products.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
+import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 
 import 'package:provider/provider.dart';
@@ -17,8 +18,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ResponsiveSizer(
@@ -27,36 +26,39 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => HomeLayoutController()),
           ChangeNotifierProvider(create: (_) => SondageController()),
           ChangeNotifierProvider(create: (_) => ThemeController()),
-          ChangeNotifierProvider(create: (_) => ProfessionalProvider()),
-          //ChangeNotifierProvider(create: (_) => EstablishmentProvider()),
-          
-          ChangeNotifierProxyProvider<ProfessionalProvider,EstablishmentProvider>(
-            create: (context) {
-              final professionalProvider = Provider.of<ProfessionalProvider>(context, listen: false);
-              return EstablishmentProvider(professionalProvider);
-            },update: (_, professionalProvider, establishmentProvider) {
-              establishmentProvider?.updateEstablishments();
-              return establishmentProvider!;
-            },
-          ),
-          
-          ChangeNotifierProxyProvider<EstablishmentProvider,Productprovider>(
-            create: (context) {
-              final establishmentProvider = Provider.of<EstablishmentProvider>(context, listen: false);
-              return Productprovider(establishmentProvider);
-            },
-            update: (_, establishmentProvider, productprovider) {
-              productprovider?.updateProducts();
-              return productprovider!;
-            },
-          ),
-          //ChangeNotifierProvider(create: (_) => Productprovider(),
+          ChangeNotifierProvider(create: (_) => Auth()),
+          //ChangeNotifierProvider(create: (_) => Establishments()),
+          ChangeNotifierProxyProvider<Auth, Establishments>(
+              create: (context) => Establishments()..updateEstablishments(),
+              update: (_, professionalProvider, establishments) =>establishments!
+              ..updateEstablishments()
+              ..getdata(professionalProvider.token)
+              ..getselectedestab(professionalProvider
+              .selectedestablishment)
+ /*{
 
+                if (establishments?.selectedestablishment != professionalProvider.selectedestablishment) {
+                  print ("new new");
+                  establishments!..updateEstablishments()..getdata(professionalProvider.token)..state()..getselectedestab(professionalProvider.selectedestablishment);
+                } else {
+                  print("old old");
+                  establishments!..getdata(professionalProvider.token)..state()..getselectedestab(professionalProvider.selectedestablishment);
+                }
+                return establishments;
+              }),
+              */
+          ),
+          ChangeNotifierProxyProvider<Establishments, Products>(
+            create: (context) => Products(),
+            update: (_, establishments, products) => products!
+              ..updateProducts()
+              ..getdata(establishments.token),
+          ),
         ],
         child: MaterialApp(
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
-          home:  LoginPage(),
+          home: LoginPage(),
         ),
       ),
     );

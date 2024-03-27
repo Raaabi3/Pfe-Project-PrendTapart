@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
-import 'package:menu_digitale_tablette/helpers/providers/products.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
 import 'package:menu_digitale_tablette/views/pages/panier/panier_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/parametre_screen.dart';
@@ -19,8 +19,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final Productprovider prodProvider = Provider.of<Productprovider>(context);
-
+    final Products prodProvider = Provider.of<Products>(context);
       return  Scaffold(
         bottomNavigationBar: Container(
           height: 12.h,

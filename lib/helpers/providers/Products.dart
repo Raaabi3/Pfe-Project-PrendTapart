@@ -1,27 +1,31 @@
 import 'dart:convert';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
-import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
 import 'package:http/http.dart';
-import 'package:menu_digitale_tablette/helpers/providers/establishment.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_size_model.dart';
 import 'package:menu_digitale_tablette/services/auth/products_api.dart';
 
-class Productprovider extends ChangeNotifier {
-  EstablishmentProvider establishmentProvider;
-  Productprovider(this.establishmentProvider);
-  String token = ProfessionalProvider().token;
-  int establishmentid = 99569;
-  //int productid = 243;
+class Products extends ChangeNotifier {
+  String? token;
+
+  void getdata(newtoken) {
+    token = newtoken;
+    notifyListeners();
+  }
+
+  void state(){
+  print("state is started");
+print("the token is $token");
+}
+
   List<Product> products = [];
   List<ProductSize> productsize = [];
+  
   List<Map<String, dynamic>> establishmentProducts = [];
-
   Future<Either<String, List<Product>>> getProducts(id) async {
     try {
-      Response response = await fetchListProductS(
-          establishmentProvider.professionalProvider.token, id);
+      Response response = await fetchListProductS(token!, id);
       print("the response" + response.statusCode.toString());
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
@@ -42,8 +46,7 @@ class Productprovider extends ChangeNotifier {
 
   Future<Either<String, List<ProductSize>>> fetchProductSize(int id) async {
     try {
-      Response response = await fetchProductSizeS(
-          establishmentProvider.professionalProvider.token, id);
+      Response response = await fetchProductSizeS(token!, id);
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
         for (var productsizeData in jsonData) {
@@ -60,11 +63,10 @@ class Productprovider extends ChangeNotifier {
       return Left('Error: $e');
     }
   }
+
   void updateProducts() {
     products.clear();
-                  print("products is emptied");
-
+    print("products is emptied");
     notifyListeners();
   }
-
 }

@@ -9,7 +9,7 @@ import 'package:menu_digitale_tablette/views/pages/parametres/code_de_securite_p
 import 'package:menu_digitale_tablette/views/pages/parametres/information_resto_popup_.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/parametre_de_table_popup.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/theme_popup.dart';
-import 'package:menu_digitale_tablette/helpers/providers/auth.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
 import 'package:menu_digitale_tablette/views/widgets/parametre/parametre_item.dart';
 import 'package:provider/provider.dart';
 
@@ -42,8 +42,8 @@ class _ParametreScreenState extends State<ParametreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ProfessionalProvider _provider =
-        Provider.of<ProfessionalProvider>(context);
+    final Auth _provider =
+        Provider.of<Auth>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: [
