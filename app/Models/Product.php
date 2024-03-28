@@ -45,5 +45,6 @@ class Product extends Model
     {
         return $this->hasMany(EstablishmentProduct::class, 'product_id');
     }
+
 }
 

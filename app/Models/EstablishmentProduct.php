@@ -47,6 +47,22 @@ class EstablishmentProduct extends Model
     {
         return $this->belongsTo(Product::class );
     }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function establishmentProductExtras()
+    {
+        return $this->hasMany(EstablishmentProductExtra::class, 'establishment_product_id');
+    }
+
+    public function establishmentextras()
+    {
+        return $this->hasManyThrough(EstablishmentExtra::class, EstablishmentProductExtra::class, 'establishment_product_id', 'id', 'id', 'establishment_extra_id');
+    }
+
+
 
 }
 

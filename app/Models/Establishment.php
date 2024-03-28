@@ -59,5 +59,9 @@ class Establishment extends Model
     public function roles(){
         return $this->hasMany(Roles::class);
     }
+    public function digitalMenuFormules()
+    {
+        return $this->belongsTo(DigitalMenuFormules::class, 'establishment_id');
+    }
 
 }

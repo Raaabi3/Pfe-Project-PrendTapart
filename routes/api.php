@@ -6,8 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EstablishmentController;
 use App\Http\Controllers\ProfessionalController;
 use App\Http\Controllers\EstablishmentProductsController;
-
-
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,14 +21,14 @@ use App\Http\Controllers\EstablishmentProductsController;
 
 
 Route::middleware('auth:sanctum')->prefix('professionals')->group(function () {
-    Route::get('/{professional_id}/establishments', [ProfessionalController::class,'getProfessionalsbyRole']);
+    Route::get('/establishments', [ProfessionalController::class,'getProfessionalsbyRole']);
     Route::get('/profile',[ProfessionalController::class,'profile']);
 });
 Route::middleware('auth:sanctum')->prefix('establishments')->group(function () {
     Route::get('/{establishments_id}/products', [EstablishmentProductsController ::class,'getProducts']);
-
-
-
+    Route::get('/{product_id}/size', [ProductController ::class,'getProductsize']);
+    Route::get('/{estab_id}/extra', [ProductController ::class,'getProductextra']);
+    Route::get('/{estab_id}/categories', [ProductController ::class,'getProductsByCategoryForEstablishment']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);
