@@ -5,4 +5,10 @@ class ApiLinks {
   static const String getEstablishments = '$baseUrl/professionals/establishments';
   static String getProducts(int id) => '$baseUrl/establishments/$id/products';
   static String getProductsSize(int id) => '$baseUrl/establishments/$id/size';
+  static String getProductsExtra(int id) => '$baseUrl/establishments/$id/extra';
 }
+
+
+
+
+

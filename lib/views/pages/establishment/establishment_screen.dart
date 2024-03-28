@@ -26,7 +26,13 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
       body: Consumer<Establishments>(
         builder: (context, provider, _) {
           if (provider.establishments.isEmpty) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Image.network(
+          'https://static.wixstatic.com/media/86db9f_8068af7e0840429baadcc64cbf155c0f~mv2.gif',
+          alignment: Alignment.center,
+          color:Colors.white,
+          repeat: ImageRepeat.repeat,
+          gaplessPlayback: true,
+        ),);
           } else {
             return ListView.builder(
               itemCount: provider.establishments.length,

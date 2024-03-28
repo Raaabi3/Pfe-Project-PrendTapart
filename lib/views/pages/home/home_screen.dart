@@ -280,7 +280,10 @@ class HomeScreen extends StatelessWidget {
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
                               prodProvider.fetchProductSize(prodProvider.products[index].id);
+                              prodProvider.fetchProductExtra(prodProvider.products[index].id);
                               print('the provide size is :'+prodProvider.productsize.length.toString()+"and the id is "+prodProvider.products[index].id.toString());
+                              print('the provide extra is :'+prodProvider.productextra.length.toString()+"and the id is "+prodProvider.products[index].id.toString());
+
                               SideSheet.left(
                                 body: ProduitScreen(product :prodProvider.products[index]),
                                 context: context,

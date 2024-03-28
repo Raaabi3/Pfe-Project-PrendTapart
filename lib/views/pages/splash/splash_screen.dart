@@ -5,7 +5,10 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Image.network(
+          'https://i.pinimg.com/originals/de/dc/25/dedc25f0ffe2622c2ab7f325ea2bc9f2.gif',
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

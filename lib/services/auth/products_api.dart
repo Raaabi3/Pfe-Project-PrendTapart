@@ -24,4 +24,16 @@ Future<http.Response> fetchProductSizeS(String token ,int id  ) async {
       );
         return response;
       }
+      
+      Future<http.Response> fetchProductExtraS(String token ,int id  ) async {
+
+      final response = await http.get(
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        Uri.parse(ApiLinks.getProductsExtra(id)),
+      );
+        return response;
+      }
 

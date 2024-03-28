@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:menu_digitale_tablette/models/product_model/product_extra.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_size_model.dart';
 import 'package:menu_digitale_tablette/services/auth/products_api.dart';
@@ -21,7 +22,8 @@ print("the token is $token");
 
   List<Product> products = [];
   List<ProductSize> productsize = [];
-  
+  List<ProductExtra> productextra = [];
+
   List<Map<String, dynamic>> establishmentProducts = [];
   Future<Either<String, List<Product>>> getProducts(id) async {
     try {
@@ -48,6 +50,7 @@ print("the token is $token");
     try {
       Response response = await fetchProductSizeS(token!, id);
       if (response.statusCode == 200) {
+        productsize.clear();
         final List<dynamic> jsonData = jsonDecode(response.body);
         for (var productsizeData in jsonData) {
           ProductSize size = ProductSize.fromJson(productsizeData);
@@ -56,6 +59,24 @@ print("the token is $token");
 
         notifyListeners();
         return Right(productsize);
+      } else {
+        return Left('Unauthorized user');
+      }
+    } catch (e) {
+      return Left('Error: $e');
+    }
+  }
+    Future<Either<String, List<ProductExtra>>> fetchProductExtra(int id) async {
+    try {
+      Response response = await fetchProductExtraS(token!, id);
+      if (response.statusCode == 200) {
+        productextra.clear();
+        final List<dynamic> jsonData = jsonDecode(response.body);
+        for (var productsizeData in jsonData) {
+          productextra.add(ProductExtra.fromJson(productsizeData));
+        }
+        notifyListeners();
+        return Right(productextra);
       } else {
         return Left('Unauthorized user');
       }

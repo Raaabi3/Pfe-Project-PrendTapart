@@ -251,7 +251,7 @@ class _ProduitScreenState extends State<ProduitScreen> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        "barbecue",
+                                        prod_provider.productextra[index].name,
                                         style: body.copyWith(
                                           fontWeight: FontWeight.w500,
                                           color: sauceSelected == index
@@ -267,7 +267,7 @@ class _ProduitScreenState extends State<ProduitScreen> {
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        "+ 2,00€",
+                                        "+ "+prod_provider.productextra[index].price.toString()+"€" ,
                                         style: body.copyWith(
                                           fontWeight: FontWeight.w500,
                                           color: sauceSelected == index
