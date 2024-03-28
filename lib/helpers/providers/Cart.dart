@@ -1,3 +1,0 @@
-class Establishments extends ChangeNotifier {
-    
-}
