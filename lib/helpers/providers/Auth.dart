@@ -13,7 +13,7 @@ import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
 class Auth extends ChangeNotifier {
   late String token = "";
   List<ProfessionalModel> professional = [];
-  Establishment selectedestablishment=Establishment(id: 0, name: "", showHome: 0);
+  Establishment? selectedestablishment;
 
 void updateToken(String newToken) {
 token = newToken;

@@ -15,10 +15,6 @@ class Products extends ChangeNotifier {
     notifyListeners();
   }
 
-  void state(){
-  print("state is started");
-print("the token is $token");
-}
 
   List<Product> products = [];
   List<ProductSize> productsize = [];
@@ -28,8 +24,9 @@ print("the token is $token");
   Future<Either<String, List<Product>>> getProducts(id) async {
     try {
       Response response = await fetchListProductS(token!, id);
-      print("the response" + response.statusCode.toString());
       if (response.statusCode == 200) {
+        products.clear();
+
         final List<dynamic> jsonData = jsonDecode(response.body);
         for (var productData in jsonData) {
           products.add(Product.fromJson(productData));
@@ -86,7 +83,6 @@ print("the token is $token");
   }
 
   void updateProducts() {
-    products.clear();
     print("products is emptied");
     notifyListeners();
   }

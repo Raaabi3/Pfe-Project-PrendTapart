@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Categorys.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
@@ -16,7 +18,8 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
   Widget build(BuildContext context) {
     final Products prodProvider = Provider.of<Products>(context);
     final Auth AuthProvider = Provider.of<Auth>(context);
-
+    final Categorys _catprovider = Provider.of<Categorys>(context);
+    final HomeLayoutController homeprovider = Provider.of<HomeLayoutController>(context);
 
     return Scaffold(
       backgroundColor: Colors.orange[100],
@@ -26,13 +29,9 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
       body: Consumer<Establishments>(
         builder: (context, provider, _) {
           if (provider.establishments.isEmpty) {
-            return Center(child: Image.network(
-          'https://static.wixstatic.com/media/86db9f_8068af7e0840429baadcc64cbf155c0f~mv2.gif',
-          alignment: Alignment.center,
-          color:Colors.white,
-          repeat: ImageRepeat.repeat,
-          gaplessPlayback: true,
-        ),);
+            return Center(
+              child: CircularProgressIndicator(), 
+            );
           } else {
             return ListView.builder(
               itemCount: provider.establishments.length,
@@ -40,11 +39,11 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: GestureDetector(
-                    onTap: () {
-                      AuthProvider.selectedestablishment=provider.establishments[index];
-                      provider.set_selection(index);
+                    onTap: () async {
+                      AuthProvider.selectedestablishment = provider.establishments[index];
+                      await _catprovider.fetchcategory(provider.establishments[index].id);
                       prodProvider
-                          .getProducts(provider.establishments[index].id)
+                          .getProducts(_catprovider.categories[0].id)
                           .then((_) {
                         Navigator.push(
                           context,
@@ -71,8 +70,7 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: 150, 
-                            
+                            height: 150,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(8.0)),
@@ -81,10 +79,8 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                               borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(8.0)),
                               child: Image.network(
-                                provider.establishments[index]
-                                    .covImg, 
-                                    
-                                fit: BoxFit.cover, 
+                                provider.establishments[index].covImg,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
@@ -101,23 +97,18 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                                     ),
                                     child: ClipOval(
                                       child: Image.network(
-                                        provider.establishments[index]
-                                            .img,
-                                        fit: BoxFit
-                                            .cover, 
+                                        provider.establishments[index].img,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                      width:
-                                          8), 
+                                  SizedBox(width: 8),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        provider.establishments[index].name
-                                            .toString(),
+                                        provider.establishments[index].name,
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,

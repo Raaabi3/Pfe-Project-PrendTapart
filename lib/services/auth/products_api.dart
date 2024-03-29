@@ -8,7 +8,7 @@ Future<http.Response> fetchListProductS(String token ,int id  ) async {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        Uri.parse(ApiLinks.getProducts(id)),
+        Uri.parse(ApiLinks.getProductsbyCategory(id)),
       );
         return response;
       }
@@ -36,4 +36,7 @@ Future<http.Response> fetchProductSizeS(String token ,int id  ) async {
       );
         return response;
       }
+
+    
+    
 

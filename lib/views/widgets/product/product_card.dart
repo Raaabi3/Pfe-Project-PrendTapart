@@ -26,7 +26,6 @@ class ProductCard extends StatelessWidget {
                 topRight: Radius.circular(20),
               ),
               child: Image.network(
-//                "https://www.shutterstock.com/image-photo/fried-hot-chiken-fast-food-260nw-2077123948.jpg",
                 product.img,
                 fit: BoxFit.fill,
               ),

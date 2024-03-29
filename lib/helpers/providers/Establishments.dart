@@ -8,7 +8,7 @@ import 'package:menu_digitale_tablette/services/auth/establishment_api..dart';
 class Establishments extends ChangeNotifier {
 String? token;
 List<Establishment> establishments = [];
-Establishment selectedestablishment=Establishment(id: 0, name: "", showHome: 0);
+Establishment? selectedestablishment;
 
 void getdata(newtoken){
 token = newtoken;
@@ -30,9 +30,7 @@ print("the token is $token");
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
         for (var establishmentData in jsonData) {
-          Establishment establishment =
-              Establishment.fromJson(establishmentData);
-          establishments.add(establishment);
+          establishments.add(Establishment.fromJson(establishmentData));
         }
         notifyListeners();
         return Right(establishments);
@@ -51,8 +49,4 @@ print("the token is $token");
     notifyListeners();
   }
 
-  void set_selection(int index) {
-//
-    notifyListeners();
-  }
 }
