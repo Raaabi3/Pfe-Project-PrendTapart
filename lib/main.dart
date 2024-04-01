@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/controllers/sondage_controller.dart';
 import 'package:menu_digitale_tablette/controllers/theme_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Categorys.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
+import 'package:menu_digitale_tablette/models/cart_model/cart_model.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +50,8 @@ class MyApp extends StatelessWidget {
                   ..updateCategorys(categorys.categories)
                   ..getdata(establishments.token),
           ),
+          ChangeNotifierProvider(create: (_) => CartProvider()),
+
           
 
         ],

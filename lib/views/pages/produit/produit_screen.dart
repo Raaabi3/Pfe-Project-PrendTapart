@@ -34,7 +34,9 @@ class _ProduitScreenState extends State<ProduitScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.product.priceByUnit.toString() + "€",
+                
+                (widget.product.priceByUnit * qte).toString() +"€" //+prod_provider.productsize[tailleSelected].price+prod_provider.productextra[sauceSelected].price)
+                ,
                 style: headline,
               ),
               Row(
@@ -143,15 +145,18 @@ class _ProduitScreenState extends State<ProduitScreen> {
                         
                         children: [
                           ...List.generate(
-                              3,
+                            prod_provider.productsize.length,
                               (index) => Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10),
                                     child: GestureDetector(
                                       onTap: () {
-                                        tailleSelected = index;
-                                        setState(() {});
-                                      },
+  setState(() {
+    tailleSelected = index;
+  });
+},
+
+
                                       behavior: HitTestBehavior.translucent,
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -167,8 +172,21 @@ class _ProduitScreenState extends State<ProduitScreen> {
                                               horizontal: 20, vertical: 15),
                                           child: Row(
                                             children: [
+                                              /*
+                                              Image.network(
+                                        prod_provider.productsize[index]?.image ??
+                                            '', // Add null check and fallback value
+                                        fit: BoxFit.fill,
+                                        height: 60,
+                                        width: 50,
+                                      ),
+                                      */
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
                                               Text(
                                                 prod_provider.productsize[index].name.toString(),
+                                                
                                                 style: body.copyWith(
                                                     fontWeight: FontWeight.w500,
                                                     color:
@@ -227,13 +245,16 @@ class _ProduitScreenState extends State<ProduitScreen> {
                     builder: (context, setState) => SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: List.generate(3, (index) {
+                        children: List.generate(prod_provider.productextra.length, (index) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: InkWell(
                               onTap: () {
                                 sauceSelected = index;
-                                setState(() {});
+                                setState(() {
+                                      sauceSelected = index;
+
+                                });
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -250,6 +271,13 @@ class _ProduitScreenState extends State<ProduitScreen> {
                                   ),
                                   child: Row(
                                     children: [
+                                      Image.network(
+                                        prod_provider.productextra[index]?.image ??
+                                            '', // Add null check and fallback value
+                                        fit: BoxFit.fill,
+                                        height: 60,
+                                        width: 50,
+                                      ),
                                       Text(
                                         prod_provider.productextra[index].name,
                                         style: body.copyWith(
@@ -312,7 +340,9 @@ class _ProduitScreenState extends State<ProduitScreen> {
                             child: InkWell(
                               onTap: () {
                                 boissonSelected = index;
-                                setState(() {});
+                                setState(() {
+                                  boissonSelected = index;
+                                });
                               },
                               child: Container(
                                 decoration: BoxDecoration(

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Categorys.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
-import 'package:menu_digitale_tablette/models/Category_model/category_model.dart';
-import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
+import 'package:menu_digitale_tablette/models/cart_model/cart_model.dart';
 import 'package:menu_digitale_tablette/views/pages/panier/panier_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/parametre_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/produit/produit_screen.dart';
@@ -20,8 +20,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeLayoutController homelayout = Provider.of<HomeLayoutController>(context);
+    final HomeLayoutController homelayout =
+        Provider.of<HomeLayoutController>(context);
     final Categorys _catprovider = Provider.of<Categorys>(context);
+    final CartProvider _cartprovider = Provider.of<CartProvider>(context);
 
     return Scaffold(
       body: Consumer<Categorys>(
@@ -50,7 +52,8 @@ class HomeScreen extends StatelessWidget {
                                 SideSheet.right(
                                   body: const PanierScreen(),
                                   context: context,
-                                  width: MediaQuery.of(context).size.width * 0.5,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
                                 );
                               },
                               child: Container(
@@ -64,7 +67,8 @@ class HomeScreen extends StatelessWidget {
                                     vertical: 8,
                                   ),
                                   child: Text(
-                                    "4 produits",
+                                    _cartprovider.cartItems.length.toString() +
+                                        " Products",
                                     style: subhead.copyWith(
                                       color: const Color(0xff616161),
                                     ),
@@ -82,13 +86,15 @@ class HomeScreen extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: List.generate(
-                                3,
+                                _cartprovider.cartItems.length,
                                 (index) => Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                   child: Row(
                                     children: [
                                       Image.network(
-                                        "https://d2j6dbq0eux0bg.cloudfront.net/images/51235197/2146084191.jpg",
+                                        _cartprovider.cartItems[index]?.img ??
+                                            '', // Add null check and fallback value
                                         fit: BoxFit.fill,
                                         height: 60,
                                         width: 50,
@@ -97,18 +103,22 @@ class HomeScreen extends StatelessWidget {
                                         width: 8,
                                       ),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Tacos au polet",
+                                            _cartprovider
+                                                .cartItems[index].productName,
                                             style: body,
                                           ),
                                           const SizedBox(
                                             height: 3,
                                           ),
                                           Text(
-                                            "12,99€",
+                                            _cartprovider.cartItems[index].price
+                                                .toString(),
                                             style: subhead.copyWith(
                                               fontWeight: FontWeight.w600,
                                             ),
@@ -157,7 +167,9 @@ class HomeScreen extends StatelessWidget {
                           const Spacer(),
                           InkWell(
                             onTap: () {
-                              context.read<HomeLayoutController>().switchScreen(2);
+                              context
+                                  .read<HomeLayoutController>()
+                                  .switchScreen(2);
                             },
                             child: CircleAvatar(
                               radius: 15,
@@ -192,7 +204,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
                         child: Column(
                           children: [
                             const SizedBox(
@@ -211,41 +224,50 @@ class HomeScreen extends StatelessWidget {
                               itemCount: catProvider.categories.length,
                               itemBuilder: (BuildContext ctx, index) {
                                 return Consumer<HomeLayoutController>(
-                                  builder: (context, value, child) => GestureDetector(
+                                  builder: (context, value, child) =>
+                                      GestureDetector(
                                     behavior: HitTestBehavior.translucent,
                                     onTap: () {
                                       value.switchFoodTypeIndex(index);
-                                      prodProvider.getProducts(_catprovider.categories[index].id);
+                                      prodProvider.getProducts(
+                                          _catprovider.categories[index].id);
                                     },
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              catProvider.categories[index].name,
+                                              catProvider
+                                                  .categories[index].name,
                                               style: subhead.copyWith(
                                                 fontWeight:
-                                                    value.currentFoodTypeIndex == index
+                                                    value.currentFoodTypeIndex ==
+                                                            index
                                                         ? null
                                                         : FontWeight.w400,
                                               ),
                                             ),
-                                            Text(" "+index.toString())
+                                            Text(" " + index.toString())
                                           ],
                                         ),
                                         const SizedBox(
                                           height: 5,
                                         ),
                                         Visibility(
-                                          visible: value.currentFoodTypeIndex == index,
+                                          visible: value.currentFoodTypeIndex ==
+                                              index,
                                           child: Container(
                                             height: 4,
                                             width: 140,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(5),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
                                               color: pinkColor,
                                             ),
                                           ),
@@ -288,10 +310,25 @@ class HomeScreen extends StatelessWidget {
                                   return GestureDetector(
                                     behavior: HitTestBehavior.translucent,
                                     onTap: () {
-                                      prodProvider.fetchProductSize(prodProvider.products[index].id);
-                                      prodProvider.fetchProductExtra(prodProvider.products[index].id);
+                                      prodProvider.fetchProductSize(
+                                          prodProvider.products[index].id);
+                                      prodProvider.fetchProductExtra(
+                                          prodProvider.products[index].id);
+                                      var selectedProduct =
+                                          prodProvider.products[index];
+                                      var cartItem = Cart(
+                                        productId: selectedProduct.id,
+                                        productName: selectedProduct.name,
+                                        img: selectedProduct.img,
+                                        price: selectedProduct.priceByUnit,
+                                        quantity: 1, // Initial quantity
+                                      );
+                                      print(cartItem.price);
+                                      _cartprovider.addItemToCart(cartItem);
                                       SideSheet.left(
-                                        body: ProduitScreen(product :prodProvider.products[index]),
+                                        body: ProduitScreen(
+                                            product:
+                                                prodProvider.products[index]),
                                         context: context,
                                       );
                                     },

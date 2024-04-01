@@ -3,6 +3,10 @@ import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
+import 'package:menu_digitale_tablette/views/widgets/dialogs/success_diag.dart';
+
 import 'package:menu_digitale_tablette/views/widgets/parametre/parametre_button.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -12,6 +16,10 @@ class PanierScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CartProvider _cartprovider = Provider.of<CartProvider>(context);
+    final Products prodprovider = Provider.of<Products>(context);
+
+    int qte = 0;
     return Scaffold(
       body: Column(
         children: [
@@ -40,16 +48,17 @@ class PanierScreen extends StatelessWidget {
             child: Column(
               children: [
                 ...List.generate(
-                    3,
+                    _cartprovider.cartItems.length,
                     (index) => Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Row(
                             children: [
                               Image.network(
-                                "https://d2j6dbq0eux0bg.cloudfront.net/images/51235197/2146084191.jpg",
+                                _cartprovider.cartItems[index]?.img ??
+                                    '', // Add null check and fallback value
                                 fit: BoxFit.fill,
-                                width: 70,
-                                height: 100,
+                                height: 60,
+                                width: 50,
                               ),
                               const SizedBox(
                                 width: 8,
@@ -59,14 +68,15 @@ class PanierScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Tacos au polet",
+                                    _cartprovider.cartItems[index].productName,
                                     style: body,
                                   ),
                                   const SizedBox(
                                     height: 3,
                                   ),
                                   Text(
-                                    "12,99€",
+                                    _cartprovider.cartItems[index].price
+                                        .toString(),
                                     style: subhead.copyWith(
                                         fontWeight: FontWeight.w600),
                                   )
@@ -79,11 +89,15 @@ class PanierScreen extends StatelessWidget {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         color: const Color(0xff3A3244)),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(6),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Provider.of<CartProvider>(context,
+                                                listen: false)
+                                            .incrementQuantity(index);
+                                      },
                                       child: Icon(
                                         Icons.add,
-                                        color: Colors.white,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   ),
@@ -121,12 +135,17 @@ class PanierScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ParametreButton(
-              buttonText: "Passer Commande",
-              onTap: () {
-                Navigator.pop(context);
-                context.read<HomeLayoutController>().switchScreen(3);
-              },
-            ),
+                buttonText: "Passer Commande",
+                onTap: () {
+                  Navigator.pop(context);
+                  context.read<HomeLayoutController>().switchScreen(3);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SuccessDialog();
+                    },
+                  );
+                }),
           ),
           SizedBox(
             height: 10,
@@ -135,6 +154,9 @@ class PanierScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ParametreButton(
               buttonText: "Vider Panier",
+              onTap: () {
+                _cartprovider.clearCart();
+              },
               color: Color(0xffEEEEEE),
               textColor: Color(0xff626262),
             ),
