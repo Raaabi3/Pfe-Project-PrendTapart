@@ -27,8 +27,6 @@ class Product {
   final int recetteId;
   final int establishmentProductRecId;
   final int qteForOneRec;
-  //
-  //final double price_by_unit;
 
   Product({
     required this.id,
@@ -59,21 +57,19 @@ class Product {
     required this.recetteId,
     required this.establishmentProductRecId,
     required this.qteForOneRec,
-    //
-    //required this.price_by_unit,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'] ?? 0,
-      name: json['name'] ??0,
+      name: json['name'] ?? '',
       createdAt: DateTime.parse(json['created_at'] ?? ''),
       updatedAt: DateTime.parse(json['updated_at'] ?? ''),
       establishmentId: json['establishment_id'] ?? 0,
       productId: json['product_id'] ?? 0,
       unit: json['unit'] ?? '',
       location: json['location'] ?? '',
-      stockQuantity: int.parse(json['establishment_products'][0]['stock_quantity']) ,
+      stockQuantity: int.parse(json['establishment_products'][0]['stock_quantity'].toString()),
       dlc: json['dlc'] != null ? DateTime.parse(json['dlc'] ?? '') : DateTime.now(),
       ref: json['ref'] ?? '',
       img: json['img'] ?? '',
@@ -92,27 +88,10 @@ class Product {
       establishmentProductRecId: json['establishment_product_rec_id'] ?? 0,
       qteForOneRec: json['qte_for_one_rec'] ?? 0,
       establishmentProducts: json['establishment_products'] != null ? List<Map<String, dynamic>>.from(json['establishment_products']) : [],
-     // 
-priceByUnit: json['establishment_products'][0]['price_by_unit'],
-      //priceByUnit: json['price_by_unit'] != null ? double.parse(json['establishment_products'][0]['price_by_unit'].toString()) : 0.0,
-
-    
+      // Extracting price by unit from the first establishment product
+      priceByUnit: json['establishment_products'] != null && json['establishment_products'].isNotEmpty
+          ? double.parse(json['establishment_products'][0]['price_by_unit'].toString())
+          : 0.0,
     );
-    /*establishmentProductId: json['establishment_products'] != null
-          ? json['establishment_products'][0]['id'] ?? 0
-          : 0,*/
-    
   }
-  
-
-  double getPriceByUnit(int ProductId) {
-  if (establishmentProducts.isNotEmpty) {
-    var product = establishmentProducts.first;
-    if (product['product_id'] == ProductId) {
-      return product['price_by_unit'] != null ? double.parse(product['price_by_unit'].toString()) : 0.0;
-    }
-  }
-  return 6.9;
-}
-
 }

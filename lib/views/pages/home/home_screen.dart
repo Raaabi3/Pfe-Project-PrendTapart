@@ -4,7 +4,6 @@ import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
-import 'package:menu_digitale_tablette/helpers/providers/Categorys.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/models/cart_model/cart_model.dart';
 import 'package:menu_digitale_tablette/views/pages/panier/panier_screen.dart';
@@ -16,117 +15,69 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:side_sheet/side_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
+  
   const HomeScreen({Key? key});
+  
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController _scrollController = ScrollController();
     final HomeLayoutController homelayout =
         Provider.of<HomeLayoutController>(context);
-    final Categorys _catprovider = Provider.of<Categorys>(context);
+    final Products prodProvider = Provider.of<Products>(context);
     final CartProvider _cartprovider = Provider.of<CartProvider>(context);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        // User has scrolled to the end of the list, fetch new products
+        prodProvider.fetchMoreProducts();
+      }
+    });
+
 
     return Scaffold(
-      body: Consumer<Categorys>(
-        builder: (context, catProvider, _) {
-          return Consumer<Products>(
-            builder: (context, prodProvider, _) {
-              return Scaffold(
-                bottomNavigationBar: Container(
-                  height: 12.h,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Consumer<Products>(
+        builder: (context, prodProvider, _) {
+          return Scaffold(
+            bottomNavigationBar: Container(
+              height: 12.h,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
                       children: [
-                        Column(
-                          children: [
-                            Text(
-                              "Votre panier : ",
-                              style: subhead,
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                SideSheet.right(
-                                  body: const PanierScreen(),
-                                  context: context,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: const Color(0xffF4F4F4),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 8,
-                                  ),
-                                  child: Text(
-                                    _cartprovider.cartItems.length.toString() +
-                                        " Products",
-                                    style: subhead.copyWith(
-                                      color: const Color(0xff616161),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          "Votre panier : ",
+                          style: subhead,
                         ),
                         const SizedBox(
-                          width: 20,
+                          height: 5,
                         ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: List.generate(
-                                _cartprovider.cartItems.length,
-                                (index) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: Row(
-                                    children: [
-                                      Image.network(
-                                        _cartprovider.cartItems[index]?.img ??
-                                            '', // Add null check and fallback value
-                                        fit: BoxFit.fill,
-                                        height: 60,
-                                        width: 50,
-                                      ),
-                                      const SizedBox(
-                                        width: 8,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            _cartprovider
-                                                .cartItems[index].productName,
-                                            style: body,
-                                          ),
-                                          const SizedBox(
-                                            height: 3,
-                                          ),
-                                          Text(
-                                            _cartprovider.cartItems[index].price
-                                                .toString(),
-                                            style: subhead.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                        GestureDetector(
+                          onTap: () {
+                            SideSheet.right(
+                              body: const PanierScreen(),
+                              context: context,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: const Color(0xffF4F4F4),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 8,
+                              ),
+                              child: Text(
+                                _cartprovider.cartItems.length.toString() +
+                                    " Products",
+                                style: subhead.copyWith(
+                                  color: const Color(0xff616161),
                                 ),
                               ),
                             ),
@@ -134,222 +85,271 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
-                ),
-                body: Column(
-                  children: [
-                    Container(
-                      height: 10.h,
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      decoration: const BoxDecoration(color: Color(0xff3A3244)),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            "assets/icons/cocuisinage_logo.png",
-                            height: 50,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Cocuisinage",
-                            style: subhead.copyWith(color: Colors.white),
-                          ),
-                          const Spacer(),
-                          SizedBox(
-                            width: 40.w,
-                            child: AutoSizeText(
-                              "Que souhaitez-vous commander ?",
-                              maxLines: 1,
-                              style: headline.copyWith(color: Colors.white),
-                            ),
-                          ),
-                          const Spacer(),
-                          InkWell(
-                            onTap: () {
-                              context
-                                  .read<HomeLayoutController>()
-                                  .switchScreen(2);
-                            },
-                            child: CircleAvatar(
-                              radius: 15,
-                              backgroundColor: pinkColor,
-                              child: Image.asset(
-                                "assets/icons/table.png",
-                                height: 20,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              SideSheet.right(
-                                body: const ParametreScreen(),
-                                context: context,
-                              );
-                            },
-                            child: CircleAvatar(
-                              radius: 15,
-                              backgroundColor: pinkColor,
-                              child: Image.asset(
-                                "assets/icons/settings.png",
-                                height: 20,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    const SizedBox(
+                      width: 20,
                     ),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            GridView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 200,
-                                crossAxisSpacing: 50,
-                                mainAxisExtent: 50,
-                                mainAxisSpacing: 10,
-                              ),
-                              itemCount: catProvider.categories.length,
-                              itemBuilder: (BuildContext ctx, index) {
-                                return Consumer<HomeLayoutController>(
-                                  builder: (context, value, child) =>
-                                      GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onTap: () {
-                                      value.switchFoodTypeIndex(index);
-                                      prodProvider.getProducts(
-                                          _catprovider.categories[index].id);
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              catProvider
-                                                  .categories[index].name,
-                                              style: subhead.copyWith(
-                                                fontWeight:
-                                                    value.currentFoodTypeIndex ==
-                                                            index
-                                                        ? null
-                                                        : FontWeight.w400,
-                                              ),
-                                            ),
-                                            Text(" " + index.toString())
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Visibility(
-                                          visible: value.currentFoodTypeIndex ==
-                                              index,
-                                          child: Container(
-                                            height: 4,
-                                            width: 140,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              color: pinkColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(
+                            _cartprovider.cartItems.length,
+                            (index) => Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: Row(
+                                children: [
+                                  Image.network(
+                                    _cartprovider.cartItems[index]?.img ??
+                                        '', // Add null check and fallback value
+                                    fit: BoxFit.fill,
+                                    height: 60,
+                                    width: 50,
                                   ),
-                                );
-                              },
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: const Color(0xffFFECE6),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14),
-                                child: Center(
-                                  child: Text(
-                                    "Découvrire notre Petits Kiff",
-                                    style: headline.copyWith(color: pinkColor),
+                                  const SizedBox(
+                                    width: 8,
                                   ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: GridView.builder(
-                                shrinkWrap: true,
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 0.85,
-                                  crossAxisCount: 3,
-                                ),
-                                itemCount: prodProvider.products.length,
-                                itemBuilder: (BuildContext ctx, index) {
-                                  return GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onTap: () {
-                                      prodProvider.fetchProductSize(
-                                          prodProvider.products[index].id);
-                                      prodProvider.fetchProductExtra(
-                                          prodProvider.products[index].id);
-                                      var selectedProduct =
-                                          prodProvider.products[index];
-                                      var cartItem = Cart(
-                                        productId: selectedProduct.id,
-                                        productName: selectedProduct.name,
-                                        img: selectedProduct.img,
-                                        price: selectedProduct.priceByUnit,
-                                        quantity: 1, // Initial quantity
-                                      );
-                                      print(cartItem.price);
-                                      _cartprovider.addItemToCart(cartItem);
-                                      SideSheet.left(
-                                        body: ProduitScreen(
-                                            product:
-                                                prodProvider.products[index]),
-                                        context: context,
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ProductCard(
-                                        product: prodProvider.products[index],
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        _cartprovider
+                                            .cartItems[index].productName,
+                                        style: body,
                                       ),
-                                    ),
-                                  );
-                                },
+                                      const SizedBox(
+                                        height: 3,
+                                      ),
+                                      Text(
+                                        _cartprovider.cartItems[index].price
+                                            .toString(),
+                                        style: subhead.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-              );
-            },
+              ),
+            ),
+            body: Column(
+              children: [
+                Container(
+                  height: 10.h,
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  decoration: const BoxDecoration(color: Color(0xff3A3244)),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        "assets/icons/cocuisinage_logo.png",
+                        height: 50,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Cocuisinage",
+                        style: subhead.copyWith(color: Colors.white),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        width: 40.w,
+                        child: AutoSizeText(
+                          "Que souhaitez-vous commander ?",
+                          maxLines: 1,
+                          style: headline.copyWith(color: Colors.white),
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          context.read<HomeLayoutController>().switchScreen(2);
+                        },
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: pinkColor,
+                          child: Image.asset(
+                            "assets/icons/table.png",
+                            height: 20,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          SideSheet.right(
+                            body: const ParametreScreen(),
+                            context: context,
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: pinkColor,
+                          child: Image.asset(
+                            "assets/icons/settings.png",
+                            height: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            crossAxisSpacing: 50,
+                            mainAxisExtent: 50,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemCount: prodProvider.categories.length,
+                          itemBuilder: (BuildContext ctx, index) {
+                            return Consumer<HomeLayoutController>(
+                              builder: (context, value, child) =>
+                                  GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  value.switchFoodTypeIndex(index);
+                                  prodProvider.fetchProductsAndCategorize(
+                                      prodProvider.categories[index].id);
+                                                                                          prodProvider.selectedCategory = index;
+
+                                },
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          prodProvider.categories[index].name,
+                                          style: subhead.copyWith(
+                                            fontWeight:
+                                                value.currentFoodTypeIndex ==
+                                                        index
+                                                    ? null
+                                                    : FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(" " + index.toString())
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Visibility(
+                                      visible:
+                                          value.currentFoodTypeIndex == index,
+                                      child: Container(
+                                        height: 4,
+                                        width: 140,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: pinkColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: const Color(0xffFFECE6),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Center(
+                              child: Text(
+                                "Découvrire notre Petits Kiff",
+                                style: headline.copyWith(color: pinkColor),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: GridView.builder(
+                            controller: _scrollController, // Add ScrollController here
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            crossAxisSpacing: 50,
+                            mainAxisExtent: 50,
+                            mainAxisSpacing: 10,
+                          ),
+                            itemCount: 0, // w7alet lahne
+                            itemBuilder: (BuildContext ctx, index) {
+                              return GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  prodProvider.fetchProductSize(
+                                      prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].id);
+                                  prodProvider.fetchProductExtra(
+                                      prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].id);
+                                  var selectedProduct =
+                                      prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index];
+                                  var cartItem = Cart(
+                                    productId: selectedProduct.id,
+                                    productName: selectedProduct.product[index].name,
+                                    img: selectedProduct.product[index].img,
+                                    price: selectedProduct.product[index].priceByUnit,
+                                    quantity: 1, // Initial quantity
+                                  );
+                                  print(cartItem.price);
+                                  _cartprovider.addItemToCart(cartItem);
+                                  SideSheet.left(
+                                    body: ProduitScreen(
+                                        product: prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].product[0]),
+                                    context: context,
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ProductCard(
+                                    product: prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].product[0],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),

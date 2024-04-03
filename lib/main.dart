@@ -3,7 +3,6 @@ import 'package:menu_digitale_tablette/controllers/sondage_controller.dart';
 import 'package:menu_digitale_tablette/controllers/theme_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
-import 'package:menu_digitale_tablette/helpers/providers/Categorys.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/models/cart_model/cart_model.dart';
@@ -42,13 +41,6 @@ class MyApp extends StatelessWidget {
             update: (_, establishments, products) => products!
               ..updateProducts()
               ..getdata(establishments.token),
-          ),
-          ChangeNotifierProxyProvider<Establishments, Categorys>(
-            create: (context) => Categorys(),
-            update: (_, establishments, categorys) =>
-                categorys!
-                  ..updateCategorys(categorys.categories)
-                  ..getdata(establishments.token),
           ),
           ChangeNotifierProvider(create: (_) => CartProvider()),
 

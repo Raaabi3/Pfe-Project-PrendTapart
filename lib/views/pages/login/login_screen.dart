@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
-import 'package:menu_digitale_tablette/helpers/providers/Categorys.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_model.dart';

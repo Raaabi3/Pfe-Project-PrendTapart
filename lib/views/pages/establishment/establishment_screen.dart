@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
-import 'package:menu_digitale_tablette/helpers/providers/Categorys.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
@@ -18,8 +16,6 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
   Widget build(BuildContext context) {
     final Products prodProvider = Provider.of<Products>(context);
     final Auth AuthProvider = Provider.of<Auth>(context);
-    final Categorys _catprovider = Provider.of<Categorys>(context);
-    final HomeLayoutController homeprovider = Provider.of<HomeLayoutController>(context);
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 82, 60, 95),
@@ -45,9 +41,9 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                   child: GestureDetector(
                     onTap: () async {
                       AuthProvider.selectedestablishment = provider.establishments[index];
-                      await _catprovider.fetchcategory(provider.establishments[index].id);
+                      await prodProvider.fetchcategory(provider.establishments[index].id);
                       prodProvider
-                          .getProducts(_catprovider.categories[0].id)
+                          .fetchProductsAndCategorize(prodProvider.categories[0].id)
                           .then((_) {
                         Navigator.push(
                           context,

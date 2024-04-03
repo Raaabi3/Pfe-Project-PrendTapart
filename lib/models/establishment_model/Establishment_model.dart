@@ -82,5 +82,6 @@ class Establishment {
       imageArticle: json['image_article'] ?? '',
       contentArticle: json['content_article'] ?? '',
     );
+    
   }
 }

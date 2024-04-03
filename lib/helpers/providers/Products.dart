@@ -2,13 +2,21 @@ import 'dart:convert';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:menu_digitale_tablette/models/Category_model/category_model.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_extra.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
 import 'package:menu_digitale_tablette/models/product_model/product_size_model.dart';
+import 'package:menu_digitale_tablette/services/auth/category_api.dart';
 import 'package:menu_digitale_tablette/services/auth/products_api.dart';
 
 class Products extends ChangeNotifier {
   String? token;
+  int  currentPage = 1;
+  bool hasMoreData = true;
+  bool isLoading = false;
+  int perPage = 3;
+  int categoryId=0;
+  int selectedCategory=0;
 
   void getdata(newtoken) {
     token = newtoken;
@@ -19,29 +27,89 @@ class Products extends ChangeNotifier {
   List<Product> products = [];
   List<ProductSize> productsize = [];
   List<ProductExtra> productextra = [];
+  List<Category> categories = [] ; 
 
-  List<Map<String, dynamic>> establishmentProducts = [];
-  Future<Either<String, List<Product>>> getProducts(id) async {
-    try {
-      Response response = await fetchListProductS(token!, id);
-      if (response.statusCode == 200) {
-        products.clear();
 
-        final List<dynamic> jsonData = jsonDecode(response.body);
-        for (var productData in jsonData) {
-          products.add(Product.fromJson(productData));
-        }
-        notifyListeners();
-        return Right(products);
-      } else {
-        print("Request failed with status: ${response.statusCode}");
-        return Left('Unauthorized user');
+
+
+Future<Either<String, List<Category>>> fetchcategory(int id) async {
+  try {
+    Response response = await fetchCategoryS(token!, id);
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
+      for (var data in jsonData) {
+        Category cat = Category.fromJson(data);
+        categories.add(cat);
       }
-    } catch (e) {
-      print('Error while fetching products: $e');
-      return Left('Error: $e');
+      notifyListeners();
+      return Right(categories);
+    } else {
+      return Left('Unauthorized user');
+    }
+  } catch (e) {
+    print('Error fetching categories: $e');
+    return Left('Error fetching categories');
+  }
+}
+  Future<void> fetchMoreProducts() async {
+    if (!isLoading && hasMoreData) {
+      try {
+        isLoading = true;
+        currentPage++;
+        await fetchProductsAndCategorize(categoryId);
+      } catch (e) {
+        print('Error fetching more products: $e');
+      } finally {
+        isLoading = false;
+        notifyListeners();
+      }
     }
   }
+
+  Future<void> fetchProductsAndCategorize(int categoryId) async {
+  if (isLoading || !hasMoreData) return;
+  try {
+    isLoading = true;
+    Response response = await fetchListProductS(token!, categoryId, currentPage, perPage);
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
+      final List<dynamic> productList = jsonData['data'];
+      if (productList.isEmpty) {
+        hasMoreData = false;
+        print("Product list is empty");
+      } else {
+        Category category = categories.firstWhere((cat) => cat.id == categoryId);
+          category.categoryProduct.forEach((catProd) => catProd.product.clear());
+          print("Category: ${category.name}");
+          for (var productData in productList) {
+            final List<dynamic> establishmentProducts = productData['establishment_products'];
+            for (var establishmentProduct in establishmentProducts) {
+              final int productId = establishmentProduct['id'];
+              category.categoryProduct.forEach((catProd) {
+                if (catProd.establishmentProductId == productId) {
+                  catProd.product.add(Product.fromJson(productData));
+                  notifyListeners();
+                }
+                }
+              );
+            }
+          }
+      }
+    } else {
+      print("Request failed with status: ${response.statusCode}");
+      throw Exception('Failed to load products');
+    }
+  } catch (e) {
+    print('Error fetching and categorizing products: $e');
+  } finally {
+    isLoading = false;
+    print("Is loading: $isLoading");
+    notifyListeners();
+  }
+}
+
+
+
 
   Future<Either<String, List<ProductSize>>> fetchProductSize(int id) async {
     try {
@@ -63,6 +131,7 @@ class Products extends ChangeNotifier {
       return Left('Error: $e');
     }
   }
+  
     Future<Either<String, List<ProductExtra>>> fetchProductExtra(int id) async {
     try {
       Response response = await fetchProductExtraS(token!, id);
