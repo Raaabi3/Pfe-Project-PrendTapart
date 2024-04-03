@@ -15,9 +15,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:side_sheet/side_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
-  
   const HomeScreen({Key? key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,6 @@ class HomeScreen extends StatelessWidget {
         prodProvider.fetchMoreProducts();
       }
     });
-
 
     return Scaffold(
       body: Consumer<Products>(
@@ -233,8 +230,7 @@ class HomeScreen extends StatelessWidget {
                                   value.switchFoodTypeIndex(index);
                                   prodProvider.fetchProductsAndCategorize(
                                       prodProvider.categories[index].id);
-                                                                                          prodProvider.selectedCategory = index;
-
+                                  prodProvider.selectedCategory = index;
                                 },
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -297,51 +293,77 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          child: GridView.builder(
-                            controller: _scrollController, // Add ScrollController here
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            crossAxisSpacing: 50,
-                            mainAxisExtent: 50,
-                            mainAxisSpacing: 10,
-                          ),
-                            itemCount: 0, // w7alet lahne
-                            itemBuilder: (BuildContext ctx, index) {
-                              return GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  prodProvider.fetchProductSize(
-                                      prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].id);
-                                  prodProvider.fetchProductExtra(
-                                      prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].id);
-                                  var selectedProduct =
-                                      prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index];
-                                  var cartItem = Cart(
-                                    productId: selectedProduct.id,
-                                    productName: selectedProduct.product[index].name,
-                                    img: selectedProduct.product[index].img,
-                                    price: selectedProduct.product[index].priceByUnit,
-                                    quantity: 1, // Initial quantity
-                                  );
-                                  print(cartItem.price);
-                                  _cartprovider.addItemToCart(cartItem);
-                                  SideSheet.left(
-                                    body: ProduitScreen(
-                                        product: prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].product[0]),
-                                    context: context,
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ProductCard(
-                                    product: prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].product[0],
-                                  ),
-                                ),
-                              );
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (ScrollNotification scrollInfo) {
+                              if (scrollInfo is ScrollEndNotification &&
+                                  scrollInfo.metrics.extentAfter == 0) {
+                                prodProvider.fetchMoreProducts();
+                              }
+                              return true;
                             },
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 400,
+                                crossAxisSpacing: 20,
+                                mainAxisExtent: 500,
+                                mainAxisSpacing: 10,
+                              ),
+
+                              
+                              itemCount: prodProvider.categories[prodProvider.selectedCategory].categoryProduct[0].product.length,
+                              //itemCount: prodProvider.categories[prodProvider.selectedCategory].categoryProduct.length, tji ghalta 
+
+
+                              itemBuilder: (BuildContext ctx, index) {
+                                return GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    //prodProvider.fetchProductSize(
+                                    //prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].id);
+                                    //prodProvider.fetchProductExtra(
+                                    // prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].id);
+                                    prodProvider
+                                        .fetchProductsAndCategorize(index);
+                                    var selectedProduct = prodProvider
+                                        .categories[
+                                            prodProvider.selectedCategory]
+                                        .categoryProduct[index];
+                                    var cartItem = Cart(
+                                      productId: selectedProduct.id,
+                                      productName:
+                                          selectedProduct.product[0].name,
+                                      img: selectedProduct.product[0].img,
+                                      price: selectedProduct
+                                          .product[0].priceByUnit,
+                                      quantity: 1,
+                                    );
+                                    print(cartItem.price);
+                                    _cartprovider.addItemToCart(cartItem);
+                                    SideSheet.left(
+                                      body: ProduitScreen(
+                                          product: prodProvider
+                                              .categories[
+                                                  prodProvider.selectedCategory]
+                                              .categoryProduct[index]
+                                              .product[0]),
+                                      context: context,
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ProductCard(
+                                      product: prodProvider
+                                          .categories[
+                                              prodProvider.selectedCategory]
+                                          .categoryProduct[index]
+                                          .product[0], //The result is empty ama
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],

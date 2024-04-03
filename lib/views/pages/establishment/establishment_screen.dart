@@ -43,14 +43,22 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                       AuthProvider.selectedestablishment = provider.establishments[index];
                       await prodProvider.fetchcategory(provider.establishments[index].id);
                       prodProvider
-                          .fetchProductsAndCategorize(prodProvider.categories[0].id)
+                          .fetchProductsAndCategorize(prodProvider.categories[0].id);
+                          prodProvider
+                          .fetchProductsAndCategorize(prodProvider.categories[1].id);
+                          prodProvider
+                          .fetchProductsAndCategorize(prodProvider.categories[2].id)
+
                           .then((_) {
+                            //print("prod is "+prodProvider.categories[0].categoryProduct[0].product[0].id.toString());
+                            
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => SplashScreen(),
                           ),
                         );
+
                         Future.delayed(Duration(seconds: 2), () {
                           Navigator.pushReplacement(
                             context,
