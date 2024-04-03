@@ -9,6 +9,7 @@ class DigitalMenuFormulesCategorie extends Model
 {
     use HasFactory;
     protected $table="digiral_menu_formules_categorie";
+
     public function digitalMenuFormules()
     {
         return $this->belongsTo(DigitalMenuFormules::class, 'digiral_menu_formules_id');
@@ -18,4 +19,5 @@ class DigitalMenuFormulesCategorie extends Model
     {
         return $this->hasMany(DigitalMenuFormulesCategorieProduct::class);
     }
+    
 }

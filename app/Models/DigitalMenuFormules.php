@@ -17,4 +17,8 @@ class DigitalMenuFormules extends Model
     {
         return $this->belongsTo(DigitalMenuFormulesCategorie::class, 'digital_menu_formules_id');
     }
+    public function categories()
+    {
+        return $this->hasMany(DigitalMenuFormulesCategorie::class, 'digiral_menu_formules_id');
+    }
 }

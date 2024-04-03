@@ -12,5 +12,10 @@ class DigitalMenuFormulesCategorieProduct extends Model
     {
         return $this->belongsTo(EstablishmentProduct::class, 'establishment_product_id');
     }
+    
+    public function digitalMenuFormulesCategorie()
+    {
+        return $this->belongsTo(DigitalMenuFormulesCategorie::class, 'digital_menu_formules_categorie_id');
+    }
 
 }

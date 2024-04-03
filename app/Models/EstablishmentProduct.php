@@ -61,6 +61,10 @@ class EstablishmentProduct extends Model
     {
         return $this->hasManyThrough(EstablishmentExtra::class, EstablishmentProductExtra::class, 'establishment_product_id', 'id', 'id', 'establishment_extra_id');
     }
+    public function digitalMenuFormulesCategorieProducts()
+    {
+        return $this->hasOne(DigitalMenuFormulesCategorieProduct::class, 'establishment_product_id');
+    }
 
 
 

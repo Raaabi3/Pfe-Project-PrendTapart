@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EstablishmentProductSizes;
 use App\Models\DigitalMenuFormulesCategorie;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Models\EstablishmentExtra;
 use App\Models\Product;
 
@@ -48,5 +48,25 @@ public function getProductsByCategoryForEstablishment($establishmentId)
 
     return response()->json($categoriesWithProducts);
 }
+
+public function getCategories($establishmentId)
+    {
+        $categories = DigitalMenuFormulesCategorie::with('digitalMenuFormulesCategorieProducts')->
+            whereHas('digitalMenuFormules', function ($query) use ($establishmentId) {
+                $query->where('establishment_id', $establishmentId);
+            })
+            ->get();
+        return response()->json($categories);
+    }public function getproductsbycategorie($categorie, Request $request) {
+        $perPage = $request->input('perPage', 3); // Default per page limit
+        $page = $request->input('page', 1); // Default page number
+        $products = Product::with('establishmentProducts')
+            ->whereHas('establishmentProducts.digitalMenuFormulesCategorieProducts', function ($query) use ($categorie) {
+                $query->where('digital_menu_formules_categorie_id', $categorie);
+            })
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        return $products;
+    }
 
 }
