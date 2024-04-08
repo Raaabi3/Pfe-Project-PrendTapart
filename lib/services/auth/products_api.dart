@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'package:menu_digitale_tablette/helpers/providers/ApiLinks.dart';
 
-Future<http.Response> fetchListProductS(token, id, page, perPage) async {
+Future<http.Response> fetchListProductS(token, id, page) async {
   final response = await http.get(
-    Uri.parse('${ApiLinks.getProductsbyCategory(id)}?page=$page&perPage=$perPage'),
+    Uri.parse('${ApiLinks.getProductsbyCategory(id)}?page=$page'),
     headers: {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',

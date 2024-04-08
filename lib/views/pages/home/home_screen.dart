@@ -20,21 +20,23 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScrollController _scrollController = ScrollController();
-    final HomeLayoutController homelayout =
-        Provider.of<HomeLayoutController>(context);
-    final Products prodProvider = Provider.of<Products>(context);
-    final CartProvider _cartprovider = Provider.of<CartProvider>(context);
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        // User has scrolled to the end of the list, fetch new products
-        prodProvider.fetchMoreProducts();
-      }
-    });
 
     return Scaffold(
       body: Consumer<Products>(
         builder: (context, prodProvider, _) {
+          final HomeLayoutController homeLayout =
+              Provider.of<HomeLayoutController>(context);
+          final CartProvider _cartprovider = Provider.of<CartProvider>(context);
+
+          _scrollController.addListener(() {
+            if (_scrollController.position.pixels ==
+                    _scrollController.position.maxScrollExtent &&
+                prodProvider.currentPage <= prodProvider.lastpage) {
+              prodProvider.fetchProductsAndCategorize(
+                  prodProvider.selectedCategory!.id);
+            }
+          });
+
           return Scaffold(
             bottomNavigationBar: Container(
               height: 12.h,
@@ -97,8 +99,7 @@ class HomeScreen extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Image.network(
-                                    _cartprovider.cartItems[index]?.img ??
-                                        '', // Add null check and fallback value
+                                    _cartprovider.cartItems[index]?.img ?? '',
                                     fit: BoxFit.fill,
                                     height: 60,
                                     width: 50,
@@ -210,70 +211,70 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 20),
-                        GridView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            crossAxisSpacing: 50,
-                            mainAxisExtent: 50,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemCount: prodProvider.categories.length,
-                          itemBuilder: (BuildContext ctx, index) {
-                            return Consumer<HomeLayoutController>(
-                              builder: (context, value, child) =>
-                                  GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  value.switchFoodTypeIndex(index);
-                                  prodProvider.fetchProductsAndCategorize(
-                                      prodProvider.categories[index].id);
-                                  prodProvider.selectedCategory = index;
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          prodProvider.categories[index].name,
-                                          style: subhead.copyWith(
-                                            fontWeight:
-                                                value.currentFoodTypeIndex ==
-                                                        index
-                                                    ? null
-                                                    : FontWeight.w400,
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: List.generate(
+                              prodProvider.categories.length,
+                              (index) => Consumer<HomeLayoutController>(
+                                builder: (context, value, child) =>
+                                    GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    value.switchFoodTypeIndex(index);
+                                    prodProvider.getselectedcat(
+                                        prodProvider.categories[index]);
+                                        prodProvider.fetchProductsAndCategorize(
+                                        prodProvider.selectedCategory!.id);
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            prodProvider.categories[index].name,
+                                            style: subhead.copyWith(
+                                              fontWeight:
+                                                  value.currentFoodTypeIndex ==
+                                                          index
+                                                      ? null
+                                                      : FontWeight.w400,
+                                            ),
+                                            
+                                          ),
+                                          const SizedBox(
+                                        width: 20,
+                                      ),
+                                          
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Visibility(
+                                        visible:
+                                            value.currentFoodTypeIndex == index,
+                                        child: Container(
+                                          height: 4,
+                                          width: 140,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: pinkColor,
                                           ),
                                         ),
-                                        Text(" " + index.toString())
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Visibility(
-                                      visible:
-                                          value.currentFoodTypeIndex == index,
-                                      child: Container(
-                                        height: 4,
-                                        width: 140,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: pinkColor,
-                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 20),
                         Container(
@@ -296,8 +297,12 @@ class HomeScreen extends StatelessWidget {
                           child: NotificationListener<ScrollNotification>(
                             onNotification: (ScrollNotification scrollInfo) {
                               if (scrollInfo is ScrollEndNotification &&
-                                  scrollInfo.metrics.extentAfter == 0) {
-                                prodProvider.fetchMoreProducts();
+                                  scrollInfo.metrics.extentAfter == 0 &&
+                                  prodProvider.currentPage <=
+                                      prodProvider.lastpage) {
+                                prodProvider.fetchProductsAndCategorize(
+                                    prodProvider.selectedCategory!.id);
+                                    print("should fetch this cat :"+prodProvider.selectedCategory!.id.toString());
                               }
                               return true;
                             },
@@ -310,58 +315,49 @@ class HomeScreen extends StatelessWidget {
                                 mainAxisExtent: 500,
                                 mainAxisSpacing: 10,
                               ),
-
-                              
-                              itemCount: prodProvider.categories[prodProvider.selectedCategory].categoryProduct[0].product.length,
-                              //itemCount: prodProvider.categories[prodProvider.selectedCategory].categoryProduct.length, tji ghalta 
-
-
+                              itemCount: prodProvider.selectedCategory
+                                      ?.categoryProduct.length ??
+                                  0,
                               itemBuilder: (BuildContext ctx, index) {
-                                return GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () {
-                                    //prodProvider.fetchProductSize(
-                                    //prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].id);
-                                    //prodProvider.fetchProductExtra(
-                                    // prodProvider.categories[prodProvider.selectedCategory].categoryProduct[index].id);
-                                    prodProvider
-                                        .fetchProductsAndCategorize(index);
-                                    var selectedProduct = prodProvider
-                                        .categories[
-                                            prodProvider.selectedCategory]
-                                        .categoryProduct[index];
-                                    var cartItem = Cart(
-                                      productId: selectedProduct.id,
-                                      productName:
-                                          selectedProduct.product[0].name,
-                                      img: selectedProduct.product[0].img,
-                                      price: selectedProduct
-                                          .product[0].priceByUnit,
-                                      quantity: 1,
-                                    );
-                                    print(cartItem.price);
-                                    _cartprovider.addItemToCart(cartItem);
-                                    SideSheet.left(
-                                      body: ProduitScreen(
-                                          product: prodProvider
-                                              .categories[
-                                                  prodProvider.selectedCategory]
-                                              .categoryProduct[index]
-                                              .product[0]),
-                                      context: context,
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ProductCard(
-                                      product: prodProvider
-                                          .categories[
-                                              prodProvider.selectedCategory]
-                                          .categoryProduct[index]
-                                          .product[0], //The result is empty ama
+                                final categoryProduct = prodProvider
+                                    .selectedCategory?.categoryProduct;
+                                final product = categoryProduct?[index].product;
+
+                                if (product != null && product.isNotEmpty) {
+                                  // Print the ID of each product
+                                  for (var prod in product) {
+                                    print("Product ID: ${prod.id}");
+                                  }
+
+                                  return GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onTap: () {
+                                      var selectedProduct = product[
+                                          0]; // Assuming there's only one product per category product
+                                      var cartItem = Cart(
+                                        productId: selectedProduct.id,
+                                        productName: selectedProduct.name,
+                                        img: selectedProduct.img,
+                                        price: selectedProduct.priceByUnit,
+                                        quantity: 1,
+                                      );
+                                      _cartprovider.addItemToCart(cartItem);
+                                      SideSheet.left(
+                                        body: ProduitScreen(
+                                            product: selectedProduct),
+                                        context: context,
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ProductCard(
+                                          product: product[
+                                              0]), // Displaying the first product
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  return Container(); // Return a placeholder or loading widget
+                                }
                               },
                             ),
                           ),

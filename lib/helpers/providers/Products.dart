@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:menu_digitale_tablette/models/Category_model/category_model.dart';
@@ -11,163 +10,119 @@ import 'package:menu_digitale_tablette/services/auth/products_api.dart';
 
 class Products extends ChangeNotifier {
   String? token;
-  int currentPage = 1;
-  bool hasMoreData = true;
   bool isLoading = false;
-  int perPage = 3;
-  int categoryId = 0;
-  int selectedCategory = 0;
+  int currentPage = 1;
+  int lastpage = 0;
+  int total = 0;
+  List<Category> categories = [];
+  Category? selectedCategory;
+  List<ProductSize> productsize = [];
+  List<ProductExtra> productextra = [];
 
-  void getdata(newtoken) {
-    token = newtoken;
+  void nextpage() {
+    currentPage++;
     notifyListeners();
   }
 
-  List<Product> products = [];
-  List<ProductSize> productsize = [];
-  List<ProductExtra> productextra = [];
-  List<Category> categories = [];
+  void getselectedcat(Category selectedcat) {
+  selectedCategory = selectedcat;
+  currentPage = selectedcat.currentPage;
+  lastpage = selectedcat.lastPage;
+  total = selectedcat.total;
+  notifyListeners();
+  }
 
-  Future<Either<String, List<Category>>> fetchcategory(int id) async {
+  void getdata(String newToken) {
+    token = newToken;
+    notifyListeners();
+  }
+
+  Future<void> fetchcategory(int establishmentId) async {
     try {
-      Response response = await fetchCategoryS(token!, id);
+      Response response = await fetchCategoryS(token!, establishmentId);
       if (response.statusCode == 200) {
-        final dynamic jsonData = jsonDecode(response.body);
-        for (var data in jsonData) {
-          Category cat = Category.fromJson(data);
-          categories.add(cat);
+        final List<dynamic> jsonData = jsonDecode(response.body);
+        if (jsonData.isNotEmpty) {
+          categories = jsonData.map((data) => Category.fromJson(data)).toList();
+          notifyListeners();
+          print("Categories fetched successfully!!");
+        } else {
+          print('No categories available');
         }
-        notifyListeners();
-        return Right(categories);
       } else {
-        return Left('Unauthorized user');
+        print('Unauthorized user');
       }
     } catch (e) {
       print('Error fetching categories: $e');
-      return Left('Error fetching categories');
-    }
-  }
-
-  Future<void> fetchMoreProducts() async {
-    if (!isLoading && hasMoreData) {
-      print("fetching more !!!!");
-      try {
-        isLoading = true;
-        currentPage++;
-        print("current page is : $currentPage");
-        await fetchProductsAndCategorize(categoryId);
-        print("the id is : $categoryId");
-      } catch (e) {
-        print('Error fetching more products: $e');
-      } finally {
-        print("no longer loading fetch products");
-        isLoading = false;
-        notifyListeners();
-      }
     }
   }
 
   Future<void> fetchProductsAndCategorize(int categoryId) async {
-  if (isLoading || !hasMoreData) return;
-  try {
-    isLoading = true;
-    Response response =
-        await fetchListProductS(token!, categoryId, currentPage, perPage);
-    if (response.statusCode == 200) {
-      final dynamic jsonData = jsonDecode(response.body);
-      final List<dynamic> productList = jsonData['data'];
-      if (productList.isEmpty) {
-        hasMoreData = false;
-        print("Product list is empty");
-      } else {
-        Category category =
-            categories.firstWhere((cat) => cat.id == categoryId);
-        categories.forEach((category) {
-          if (category.id == categoryId) {
-            category.categoryProduct
-                .forEach((catProd) => catProd.product.clear());
-          }
-        });
-        print("Category: ${category.name}");
-        for (var productData in productList) {
-          final List<dynamic> establishmentProducts =
-              productData['establishment_products'];
-          for (var establishmentProduct in establishmentProducts) {
-            final int productId = establishmentProduct['id'];
-            category.categoryProduct.forEach((catProd) {
-              if (catProd.establishmentProductId == productId) {
-                if (catProd.product.isEmpty) {
-                  catProd.product.add(Product.fromJson(productData));
-                } else {
-                  // Check if the product already exists in the list
-                  bool productExists = catProd.product.any((p) => p.id == productId);
-                  if (!productExists) {
-                    catProd.product.add(Product.fromJson(productData));
-                  }
-                }
-                notifyListeners();
-              }
-            });
-          }
-        }
-      }
-    } else {
-      print("Request failed with status: ${response.statusCode}");
-      throw Exception('Failed to load products');
-    }
-  } catch (e) {
-    print('Error fetching and categorizing products: $e');
-  } finally {
-    print("no longer loading");
-    isLoading = false;
-    print("Is loading: $isLoading");
-    notifyListeners();
-  }
-}
-
-
-  Future<Either<String, List<ProductSize>>> fetchProductSize(int id) async {
     try {
-      Response response = await fetchProductSizeS(token!, id);
+      isLoading = true;
+      Response response = await fetchListProductS(token!, categoryId, currentPage);
       if (response.statusCode == 200) {
-        productsize.clear();
-        final List<dynamic> jsonData = jsonDecode(response.body);
-        for (var productsizeData in jsonData) {
-          ProductSize size = ProductSize.fromJson(productsizeData);
-          productsize.add(size);
+        final dynamic jsonData = jsonDecode(response.body);
+        final List<dynamic> productList = jsonData['data'];
+        if (productList.isEmpty) {
+          print("Product list is empty");
+        } else {
+        lastpage = jsonData['last_page'];
+        total = jsonData['total'];
+          Category category = categories.firstWhere((cat) => cat.id == categoryId);
+          print("Category: ${category.name}");
+          for (var productData in productList) {
+            final List<dynamic> establishmentProducts = productData['establishment_products'];
+            for (var establishmentProduct in establishmentProducts) {
+              final int productId = establishmentProduct['id'];
+              category.categoryProduct.forEach((catProd) {
+                if (catProd.establishmentProductId == productId) {
+                  bool productExists = catProd.product!.any((p) => p.establishmentProducts.first['id'] == productId);
+                  if (!productExists) {
+                    catProd.product!.add(Product.fromJson(productData));
+                  }
+                  notifyListeners();
+                }
+              });
+            }
+          }
         }
-
-        notifyListeners();
-        return Right(productsize);
       } else {
-        return Left('Unauthorized user');
+        print("Request failed with status: ${response.statusCode}");
+        throw Exception('Failed to load products');
       }
     } catch (e) {
-      return Left('Error: $e');
+      print('Error fetching and categorizing products: $e');
+    } finally {
+      print("no longer loading");
+      isLoading = false;
+      print("Is loading: $isLoading");
+      notifyListeners();
+      if (currentPage <= lastpage) {
+        nextpage();
+      }
     }
   }
 
-  Future<Either<String, List<ProductExtra>>> fetchProductExtra(int id) async {
+  Future<void> fetchProductExtra(int id) async {
     try {
       Response response = await fetchProductExtraS(token!, id);
       if (response.statusCode == 200) {
-        productextra.clear();
         final List<dynamic> jsonData = jsonDecode(response.body);
-        for (var productsizeData in jsonData) {
-          productextra.add(ProductExtra.fromJson(productsizeData));
-        }
+        final List<ProductExtra> productExtras = jsonData.map((data) => ProductExtra.fromJson(data)).toList();
+        //productextra.clear();
+        //productextra.addAll(productExtras);
         notifyListeners();
-        return Right(productextra);
       } else {
-        return Left('Unauthorized user');
+        print('Unauthorized user');
       }
     } catch (e) {
-      return Left('Error: $e');
+      print('Error: $e');
     }
   }
 
   void updateProducts() {
-    print("products is emptied");
+    print("Products is emptied");
     notifyListeners();
   }
 }

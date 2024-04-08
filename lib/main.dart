@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             create: (context) => Products(),
             update: (_, establishments, products) => products!
               ..updateProducts()
-              ..getdata(establishments.token),
+..getdata(establishments.token!),
           ),
           ChangeNotifierProvider(create: (_) => CartProvider()),
 
