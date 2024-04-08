@@ -17,17 +17,12 @@ class Products extends ChangeNotifier {
   List<ProductExtra> productextra = [];
 
   void nextpage() {
-    selectedCategory!.currentPage ++ ;
-    print(selectedCategory!.currentPage);
-    print("current page is updated ++");
+    selectedCategory!.currentPage++;
     notifyListeners();
   }
 
   void getselectedcat(Category selectedcat) {
     selectedCategory = selectedcat;
-    selectedCategory!.currentPage = selectedcat.currentPage;
-    selectedCategory!.lastPage = selectedcat.lastPage;
-    selectedCategory!.total = selectedcat.total;
     notifyListeners();
   }
 
@@ -44,7 +39,7 @@ class Products extends ChangeNotifier {
         final List<dynamic> jsonData = jsonDecode(response.body);
         if (jsonData.isNotEmpty) {
           categories = jsonData.map((data) => Category.fromJson(data)).toList();
-          selectedCategory= categories.first;
+          selectedCategory = categories.first;
           notifyListeners();
           print("Categories fetched successfully!!");
         } else {
@@ -58,11 +53,12 @@ class Products extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchproductbycategory(int id) async {
+  Future<void> fetchproductbycategory() async {
   try {
     isLoading = true;
-    notifyListeners(); 
-    Response response = await fetchListProductS(token!, selectedCategory!.id, selectedCategory!.currentPage);
+    notifyListeners();
+    Response response = await fetchListProductS(
+        token!, selectedCategory!.id, selectedCategory!.currentPage);
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
       if (jsonData.isEmpty) {
@@ -70,11 +66,14 @@ class Products extends ChangeNotifier {
       } else {
         selectedCategory!.lastPage = jsonData['last_page'];
         selectedCategory!.total = jsonData['total'];
+        if (selectedCategory!.currentPage <= selectedCategory!.lastPage) {
           List<Product> productList = (jsonData['data'] as List)
               .map((data) => Product.fromJson(data))
               .toList();
+          print("category n "+selectedCategory!.order.toString());
           selectedCategory!.product.addAll(productList);
-          notifyListeners();
+          nextpage();
+        }
       }
     } else {
       print("Request failed with status: ${response.statusCode}");
@@ -84,11 +83,9 @@ class Products extends ChangeNotifier {
     print('Error fetching and categorizing products: $e');
   } finally {
     isLoading = false;
-    notifyListeners(); 
-    nextpage();
+    notifyListeners();
   }
 }
-
 
 
   Future<void> fetchProductExtra(int id) async {
