@@ -121,7 +121,7 @@ class _ParametreScreenState extends State<ParametreScreen> {
                       // index = 1 represents historique
                     } else if (index == 1) {
                       Navigator.pop(context);
-                      context.read<HomeLayoutController>().switchScreen(1);
+                      context.read<HomeLayoutController>().switchScreen(2);
                     }
                     // index = 2 represents Theme parametre
                     else if (index == 2) {

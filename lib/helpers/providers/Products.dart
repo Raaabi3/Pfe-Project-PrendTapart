@@ -11,25 +11,24 @@ import 'package:menu_digitale_tablette/services/auth/products_api.dart';
 class Products extends ChangeNotifier {
   String? token;
   bool isLoading = false;
-  int currentPage = 1;
-  int lastpage = 0;
-  int total = 0;
   List<Category> categories = [];
   Category? selectedCategory;
   List<ProductSize> productsize = [];
   List<ProductExtra> productextra = [];
 
   void nextpage() {
-    currentPage++;
+    selectedCategory!.currentPage ++ ;
+    print(selectedCategory!.currentPage);
+    print("current page is updated ++");
     notifyListeners();
   }
 
   void getselectedcat(Category selectedcat) {
-  selectedCategory = selectedcat;
-  currentPage = selectedcat.currentPage;
-  lastpage = selectedcat.lastPage;
-  total = selectedcat.total;
-  notifyListeners();
+    selectedCategory = selectedcat;
+    selectedCategory!.currentPage = selectedcat.currentPage;
+    selectedCategory!.lastPage = selectedcat.lastPage;
+    selectedCategory!.total = selectedcat.total;
+    notifyListeners();
   }
 
   void getdata(String newToken) {
@@ -39,11 +38,13 @@ class Products extends ChangeNotifier {
 
   Future<void> fetchcategory(int establishmentId) async {
     try {
+      categories.clear();
       Response response = await fetchCategoryS(token!, establishmentId);
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
         if (jsonData.isNotEmpty) {
           categories = jsonData.map((data) => Category.fromJson(data)).toList();
+          selectedCategory= categories.first;
           notifyListeners();
           print("Categories fetched successfully!!");
         } else {
@@ -57,59 +58,46 @@ class Products extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchProductsAndCategorize(int categoryId) async {
-    try {
-      isLoading = true;
-      Response response = await fetchListProductS(token!, categoryId, currentPage);
-      if (response.statusCode == 200) {
-        final dynamic jsonData = jsonDecode(response.body);
-        final List<dynamic> productList = jsonData['data'];
-        if (productList.isEmpty) {
-          print("Product list is empty");
-        } else {
-        lastpage = jsonData['last_page'];
-        total = jsonData['total'];
-          Category category = categories.firstWhere((cat) => cat.id == categoryId);
-          print("Category: ${category.name}");
-          for (var productData in productList) {
-            final List<dynamic> establishmentProducts = productData['establishment_products'];
-            for (var establishmentProduct in establishmentProducts) {
-              final int productId = establishmentProduct['id'];
-              category.categoryProduct.forEach((catProd) {
-                if (catProd.establishmentProductId == productId) {
-                  bool productExists = catProd.product!.any((p) => p.establishmentProducts.first['id'] == productId);
-                  if (!productExists) {
-                    catProd.product!.add(Product.fromJson(productData));
-                  }
-                  notifyListeners();
-                }
-              });
-            }
-          }
-        }
+  Future<void> fetchproductbycategory(int id) async {
+  try {
+    isLoading = true;
+    notifyListeners(); 
+    Response response = await fetchListProductS(token!, selectedCategory!.id, selectedCategory!.currentPage);
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
+      if (jsonData.isEmpty) {
+        print("Product list is empty");
       } else {
-        print("Request failed with status: ${response.statusCode}");
-        throw Exception('Failed to load products');
+        selectedCategory!.lastPage = jsonData['last_page'];
+        selectedCategory!.total = jsonData['total'];
+          List<Product> productList = (jsonData['data'] as List)
+              .map((data) => Product.fromJson(data))
+              .toList();
+          selectedCategory!.product.addAll(productList);
+          notifyListeners();
       }
-    } catch (e) {
-      print('Error fetching and categorizing products: $e');
-    } finally {
-      print("no longer loading");
-      isLoading = false;
-      print("Is loading: $isLoading");
-      notifyListeners();
-      if (currentPage <= lastpage) {
-        nextpage();
-      }
+    } else {
+      print("Request failed with status: ${response.statusCode}");
+      throw Exception('Failed to load products');
     }
+  } catch (e) {
+    print('Error fetching and categorizing products: $e');
+  } finally {
+    isLoading = false;
+    notifyListeners(); 
+    nextpage();
   }
+}
+
+
 
   Future<void> fetchProductExtra(int id) async {
     try {
       Response response = await fetchProductExtraS(token!, id);
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
-        final List<ProductExtra> productExtras = jsonData.map((data) => ProductExtra.fromJson(data)).toList();
+        final List<ProductExtra> productExtras =
+            jsonData.map((data) => ProductExtra.fromJson(data)).toList();
         //productextra.clear();
         //productextra.addAll(productExtras);
         notifyListeners();
@@ -122,7 +110,8 @@ class Products extends ChangeNotifier {
   }
 
   void updateProducts() {
-    print("Products is emptied");
+    categories.clear();
+    print("Products with categories been emptied");
     notifyListeners();
   }
 }

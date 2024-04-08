@@ -6,7 +6,7 @@ import 'package:menu_digitale_tablette/views/widgets/history/commande_widget.dar
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+  const HistoryScreen({Key? key}) : super(key: key);
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -14,6 +14,8 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   bool showFilters = false;
+  String selectedDate = "JJ/MM/AAAA"; // Initial date value
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,139 +49,153 @@ class _HistoryScreenState extends State<HistoryScreen> {
             SizedBox(
               width: 80.w,
               child: Card(
-                  elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          BackButton(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Historique de commandes", style: subhead),
-                              const SizedBox(height: 5),
-                              Text("Personaliser votre menu",
-                                  style: body.copyWith(color: greyColor))
-                            ],
+                elevation: 3,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        BackButton(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Historique de commandes", style: subhead),
+                            const SizedBox(height: 5),
+                            Text("Personaliser votre menu",
+                                style: body.copyWith(color: greyColor))
+                          ],
+                        ),
+                        const Spacer(),
+                        InkWell(
+                          onTap: () {
+                            // TODO: Implement date selection
+                            // Show date picker or calendar
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: greyColor),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
+                              ),
+                              child: Row(
+                                children: [
+                                  Image.asset("assets/icons/calendar.png"),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    selectedDate,
+                                    style: body.copyWith(color: greyColor),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          const Spacer(),
-                          InkWell(
-                              onTap: () {},
-                              child: Container(
+                        ),
+                        const SizedBox(width: 10),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              showFilters = !showFilters;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: greyColor),
+                              color: showFilters ? darkPurpleColor : null,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
+                              ),
+                              child: Row(
+                                children: [
+                                  Image.asset("assets/icons/filter-icon.png"),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "Filtres",
+                                    style: body.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: showFilters ? Colors.white : null,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ]),
+                      const SizedBox(height: 10),
+                      Visibility(
+                        visible: showFilters,
+                        child: Wrap(
+                          spacing: 8.0,
+                          runSpacing: 8.0,
+                          children: [
+                            ...List.generate(
+                              7,
+                              (index) => InkWell(
+                                onTap: () {
+                                  // TODO: Implement filter selection
+                                  // Apply filter based on index
+                                },
+                                child: Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(color: greyColor),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 10,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                              "assets/icons/calendar.png"),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            "JJ/MM/AAAA",
-                                            style:
-                                                body.copyWith(color: greyColor),
-                                          )
-                                        ],
-                                      )))),
-                          const SizedBox(width: 10),
-                          InkWell(
-                              onTap: () {
-                                setState(() {
-                                  showFilters = !showFilters;
-                                });
-                              },
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: greyColor),
-                                    color: showFilters ? darkPurpleColor : null,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 10,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                              "assets/icons/filter-icon.png"),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            "Filtres",
-                                            style: body.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                color: showFilters
-                                                    ? Colors.white
-                                                    : null),
-                                          )
-                                        ],
-                                      )))),
-                        ]),
-                        const SizedBox(height: 10),
-                        Visibility(
-                            visible: showFilters,
-                            child:
-                                Wrap(spacing: 8.0, runSpacing: 8.0, children: [
-                              ...List.generate(
-                                  7,
-                                  (index) => InkWell(
-                                      onTap: () {},
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: greyColor),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 10,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset("assets/icons/filter-icon.png"),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          "Commande sur place",
+                                          style: body.copyWith(
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                          child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 15,
-                                                vertical: 10,
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Image.asset(
-                                                      "assets/icons/filter-icon.png"),
-                                                  const SizedBox(width: 5),
-                                                  Text(
-                                                    "Commande sur place",
-                                                    style: body.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  )
-                                                ],
-                                              )))))
-                            ])),
-                        const SizedBox(height: 20),
-                        Text("Aujourd’hui",
-                            style: body.copyWith(color: greyColor)),
-                        const SizedBox(height: 10),
-                        ...List.generate(
-                            10,
-                            (index) => CommandeWidget(
-                                  commandeName: "Commande sur place",
-                                  productsNumber: 105,
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const CommandeScreeen()));
-                                  },
-                                ))
-                      ],
-                    ),
-                  )),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text("Aujourd’hui", style: body.copyWith(color: greyColor)),
+                      const SizedBox(height: 10),
+                      ...List.generate(
+                        10,
+                        (index) => CommandeWidget(
+                          commandeName: "Commande sur place",
+                          productsNumber: 105,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CommandeScreeen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             )
           ],
         ),
