@@ -39,7 +39,7 @@ ChangeNotifier();
   }
 
   void decrementQuantity(int index) {
-    if (cartItems[index].quantity > 0) {
+    if (cartItems[index].quantity >1 ) {
       cartItems[index].quantity--;
       notifyListeners();
     }
