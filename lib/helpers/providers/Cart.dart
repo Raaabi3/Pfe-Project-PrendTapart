@@ -12,9 +12,20 @@ ChangeNotifier();
 }
 
   void addItemToCart(Cart item) {
-    _cartItems.add(item);
-    notifyListeners();
+  bool itemExists = false;
+  for (var product in cartItems) {
+    if (product.productId == item.productId) {
+      product.quantity++;
+      itemExists = true;
+      break;
+    }
   }
+  if (!itemExists) {
+    _cartItems.add(item);
+  }
+  notifyListeners();
+}
+
 
   void removeItemFromCart(int productId) {
     _cartItems.removeWhere((item) => item.productId == productId);

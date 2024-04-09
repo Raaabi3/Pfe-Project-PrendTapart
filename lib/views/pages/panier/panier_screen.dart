@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PanierScreen extends StatelessWidget {
-  const PanierScreen({super.key});
+  const PanierScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class PanierScreen extends StatelessWidget {
         children: [
           Container(
             color: Color(0xffEDEDED),
-            height: 10.h,
+            height: 100,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -44,133 +44,142 @@ class PanierScreen extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                ...List.generate(
+          Expanded( 
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ...List.generate(
                     _cartprovider.cartItems.length,
                     (index) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Consumer<CartProvider>(
-                              builder: (context, cartProvider, _) {
-                            return Row(
-                              children: [
-                                Image.network(
-                                  cartProvider.cartItems[index]?.img ??
-                                      '', // Add null check and fallback value
-                                  fit: BoxFit.fill,
-                                  height: 60,
-                                  width: 50,
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      cartProvider.cartItems[index].productName,
-                                      style: body,
+                      padding: const EdgeInsets.symmetric(horizontal: 12 , vertical: 7),
+                      child: Consumer<CartProvider>(
+                        builder: (context, cartProvider, _) {
+                          return Row(
+                            children: [
+                              Image.network(
+                                cartProvider.cartItems[index]?.img ?? '',
+                                fit: BoxFit.fill,
+                                height: 60,
+                                width: 50,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    cartProvider.cartItems[index].productName,
+                                    style: body,
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text(
+                                    (cartProvider.cartItems[index].price * cartProvider.cartItems[index].quantity)
+                                        .toString(),
+                                    style: subhead.copyWith(
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    const SizedBox(
-                                      height: 3,
+                                  )
+                                ],
+                              ),
+                              Spacer(),
+                              Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: const Color(0xff3A3244),
                                     ),
-                                    Text(
-                                      (cartProvider.cartItems[index].price* cartProvider.cartItems[index].quantity)
-                                          .toString(),
-                                      style: subhead.copyWith(
-                                          fontWeight: FontWeight.w600),
-                                    )
-                                  ],
-                                ),
-                                Spacer(),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: const Color(0xff3A3244)),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        cartProvider.incrementQuantity(index);
+                                      },
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    cartProvider.cartItems[index].quantity.toString(),
+                                    style: subhead,
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: const Color(0xff3A3244),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(6),
                                       child: GestureDetector(
                                         onTap: () {
-                                          cartProvider.incrementQuantity(index);
+                                          cartProvider.decrementQuantity(index);
                                         },
                                         child: Icon(
-                                          Icons.add,
+                                          Icons.remove,
                                           color: Colors.white,
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 8,
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: const Color(0xff3A3244),
                                     ),
-                                    Text(
-                                      cartProvider.cartItems[index].quantity.toString(),
-                                      style: subhead,
-                                    ),
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: const Color(0xff3A3244)),
-
-                                        child: GestureDetector(
-                                          onTap: () {
-                                      cartProvider.decrementQuantity(index);
-                                          },
-                                          child: Icon(
-                                            Icons.remove,
-                                            color: Colors.white,
-                                          ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(6),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          cartProvider.removeItemFromCart(cartProvider.cartItems[index].productId);
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: const Color(0xff3A3244)),
-                                      child:GestureDetector(
-                                          onTap: () {
-                                      cartProvider.removeItemFromCart(cartProvider.cartItems[index].productId);
-                                          },
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.white,
-                                          ),
-                                      ),
-                                    ),
-
-                                  ],
-                                )
-                              ],
-                            );
-                          }),
-                        ))
-              ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          Spacer(),
+          SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ParametreButton(
-                buttonText: "Passer Commande",
-                onTap: () {
-                  Navigator.pop(context);
-                  context.read<HomeLayoutController>().switchScreen(3);
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SuccessDialog();
-                    },
-                  );
-                }),
+              buttonText: "Passer Commande",
+              onTap: () {
+                Navigator.pop(context);
+                context.read<HomeLayoutController>().switchScreen(3);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SuccessDialog();
+                  },
+                );
+              },
+            ),
           ),
           SizedBox(
             height: 10,
@@ -194,3 +203,4 @@ class PanierScreen extends StatelessWidget {
     );
   }
 }
+
