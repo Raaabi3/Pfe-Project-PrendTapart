@@ -7,6 +7,8 @@ use App\Models\DigitalMenuFormulesCategorie;
 use Illuminate\Http\Request;
 use App\Models\EstablishmentExtra;
 use App\Models\Product;
+use App\Models\EstablishmentProductOption;
+use Exception;
 
 
 class ProductController extends Controller
@@ -30,43 +32,62 @@ class ProductController extends Controller
     }
 
 
-public function getProductsByCategoryForEstablishment($establishmentId)
-{
-    $categoriesWithProducts = DigitalMenuFormulesCategorie::with(['digitalMenuFormulesCategorieProducts.establishmentProduct.product' => function ($query) {
-        $query->select('products.*');
-    }])
-        ->whereHas('digitalMenuFormules', function ($query) use ($establishmentId) {
-            $query->where('establishment_id', $establishmentId);
-        })
-        ->get()
-        ->map(function ($category) {
-            $category->digitalMenuFormulesCategorieProducts->transform(function ($product) {
-                return $product->establishmentProduct->product;
-            });
-            return $category;
-        });
-
-    return response()->json($categoriesWithProducts);
-}
-
-public function getCategories($establishmentId)
+    public function getProductsByCategoryForEstablishment($establishmentId)
     {
-        $categories = DigitalMenuFormulesCategorie::with('digitalMenuFormulesCategorieProducts')->
-            whereHas('digitalMenuFormules', function ($query) use ($establishmentId) {
+        $categoriesWithProducts = DigitalMenuFormulesCategorie::with(['digitalMenuFormulesCategorieProducts.establishmentProduct.product' => function ($query) {
+            $query->select('products.*');
+        }])
+            ->whereHas('digitalMenuFormules', function ($query) use ($establishmentId) {
+                $query->where('establishment_id', $establishmentId);
+            })
+            ->get()
+            ->map(function ($category) {
+                $category->digitalMenuFormulesCategorieProducts->transform(function ($product) {
+                    return $product->establishmentProduct->product;
+                });
+                return $category;
+            });
+
+        return response()->json($categoriesWithProducts);
+    }
+
+    public function getCategories($establishmentId)
+    {
+        $categories = DigitalMenuFormulesCategorie::with('digitalMenuFormulesCategorieProducts')->whereHas('digitalMenuFormules', function ($query) use ($establishmentId) {
                 $query->where('establishment_id', $establishmentId);
             })
             ->get();
         return response()->json($categories);
-    }public function getproductsbycategorie($categorie, Request $request) {
-        $perPage = $request->input('perPage', 3); // Default per page limit
-        $page = $request->input('page', 1); // Default page number
+    }
+    public function getproductsbycategorie($categorie, Request $request)
+    {
         $products = Product::with('establishmentProducts')
             ->whereHas('establishmentProducts.digitalMenuFormulesCategorieProducts', function ($query) use ($categorie) {
                 $query->where('digital_menu_formules_categorie_id', $categorie);
             })
-            ->paginate($perPage, ['*'], 'page', $page);
+            ->paginate(3);
 
         return $products;
     }
+
+
+
+
+public function getproductsoptions($establishmentId, $productId)
+{
+    try {
+        $options = EstablishmentProductOption::with('group')->whereHas('group.pivot', function ($query) use ($productId) {
+            $query->where('establishment_product_id', $productId);
+        })->whereHas('group', function ($query) use ($establishmentId) {
+            $query->where('establishment_id', $establishmentId);
+        })->get();
+
+        return response()->json($options);
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
+
 
 }

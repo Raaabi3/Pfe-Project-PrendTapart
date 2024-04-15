@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->prefix('establishments')->group(function () {
     Route::get('/{estab_id}/categoriesproducts', [ProductController ::class,'getProductsByCategoryForEstablishment']);
     Route::get('/{estab_id}/categories', [ProductController ::class,'getcategories']);
     Route::get('/{category_id}/productcategorie', [ProductController ::class,'getproductsbycategorie']);
+    Route::get('{estab_id}/{prod_id}/options',[ProductController ::class,'getproductsoptions']);
 
 
 
