@@ -143,7 +143,7 @@ class PanierScreen extends StatelessWidget {
                                       padding: EdgeInsets.all(6),
                                       child: GestureDetector(
                                         onTap: () {
-                                          cartProvider.removeItemFromCart(cartProvider.cartItems[index].productId);
+                                          cartProvider.removeItemFromCart(index);
                                         },
                                         child: Icon(
                                           Icons.delete,

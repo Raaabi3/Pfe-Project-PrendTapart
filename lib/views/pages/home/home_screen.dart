@@ -5,9 +5,9 @@ import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
-import 'package:menu_digitale_tablette/models/cart_model/cart_model.dart';
 import 'package:menu_digitale_tablette/views/pages/panier/panier_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/parametre_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/plan_de_table/plan_de_table_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/produit/produit_screen.dart';
 import 'package:menu_digitale_tablette/views/widgets/product/product_card.dart';
 import 'package:provider/provider.dart';
@@ -20,127 +20,123 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScrollController _scrollController = ScrollController();
-    bool isLoading = false; 
+    bool isLoading = false;
 
     return Scaffold(
       bottomNavigationBar: Consumer<Products>(
         builder: (context, prodProvider, _) {
-          final CartProvider _cartprovider = context.read<CartProvider>();
           _scrollController.addListener(() {
             if (_scrollController.position.pixels ==
                     _scrollController.position.maxScrollExtent &&
                 !isLoading) {
-              isLoading = true; 
+              isLoading = true;
               prodProvider.fetchproductbycategory().then((_) {
-                isLoading = false; 
+                isLoading = false;
               });
               print("Scrolled to bottom");
             }
           });
 
-          return Consumer<CartProvider>(
-  builder: (context, cartProvider, _) {
-              return Container(
-                height: 12.h,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            "Votre panier : ",
-                            style: subhead,
-                          ),
-                          const SizedBox(height: 5),
-                          GestureDetector(
-                            onTap: () {
-                              SideSheet.right(
-                                body: const PanierScreen(),
-                                context: context,
-                                width: MediaQuery.of(context).size.width * 0.5,
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: const Color(0xffF4F4F4),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 8,
-                                ),
-                                child: Text(
-                                  cartProvider.cartItems.length.toString() +
-                                      " Products",
-                                  style: subhead.copyWith(
-                                    color: const Color(0xff616161),
-                                  ),
-                                ),
-                              ),
+          return Consumer<CartProvider>(builder: (context, cartProvider, _) {
+            return Container(
+              height: 12.h,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          "Votre panier : ",
+                          style: subhead,
+                        ),
+                        const SizedBox(height: 5),
+                        GestureDetector(
+                          onTap: () {
+                            SideSheet.right(
+                              body: const PanierScreen(),
+                              context: context,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: const Color(0xffF4F4F4),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: List.generate(
-                              cartProvider.cartItems.length,
-                              (index) => Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                child: Row(
-                                  children: [
-                                    Image.network(
-                                      cartProvider.cartItems[index]?.img ?? '',
-                                      fit: BoxFit.fill,
-                                      height: 60,
-                                      width: 50,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          cartProvider
-                                              .cartItems[index].productName,
-                                          style: body,
-                                        ),
-                                        const SizedBox(height: 3),
-                                        Text(
-                                          cartProvider.cartItems[index].price
-                                              .toString(),
-                                          style: subhead.copyWith(
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 8,
+                              ),
+                              child: Text(
+                                cartProvider.cartItems.length.toString() +
+                                    " Products",
+                                style: subhead.copyWith(
+                                  color: const Color(0xff616161),
                                 ),
                               ),
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(
+                            cartProvider.cartItems.length,
+                            (index) => Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: Row(
+                                children: [
+                                  Image.network(
+                                    cartProvider.cartItems[index].img,
+                                    fit: BoxFit.fill,
+                                    height: 60,
+                                    width: 50,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        cartProvider
+                                            .cartItems[index].productName,
+                                        style: body,
+                                      ),
+                                      const SizedBox(height: 3),
+                                      Text(
+                                        cartProvider.cartItems[index].price
+                                            .toString(),
+                                        style: subhead.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            }
-          );
+              ),
+            );
+          });
         },
       ),
       body: Consumer<Products>(
         builder: (context, prodProvider, _) {
-          final HomeLayoutController homeLayout =
-              Provider.of<HomeLayoutController>(context);
-
           return Column(
             children: [
               Container(
@@ -170,7 +166,11 @@ class HomeScreen extends StatelessWidget {
                     const Spacer(),
                     InkWell(
                       onTap: () {
-                        context.read<HomeLayoutController>().switchScreen(2);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PlanDeTableScreen()),
+                        );
                       },
                       child: CircleAvatar(
                         radius: 15,
@@ -285,8 +285,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: GridView.builder(
-                          controller:
-                              _scrollController, 
+                          controller: _scrollController,
                           shrinkWrap: true,
                           gridDelegate:
                               SliverGridDelegateWithMaxCrossAxisExtent(
@@ -295,46 +294,34 @@ class HomeScreen extends StatelessWidget {
                             mainAxisExtent: 500,
                             mainAxisSpacing: 10,
                           ),
-                          itemCount: prodProvider.selectedCategory!.product !=
-                                  null
-                              ? prodProvider.selectedCategory!.product.length
-                              : 0,
+                          itemCount:prodProvider.selectedCategory!.product.length,
                           itemBuilder: (BuildContext ctx, index) {
                             final product =
                                 prodProvider.selectedCategory!.product;
                             return GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {
-                                var selectedProduct = product[index];
-                                var cartItem = Cart(
-                                  productId: selectedProduct.id,
-                                  productName: selectedProduct.name,
-                                  img: selectedProduct.img,
-                                  price: selectedProduct.priceByUnit,
-                                  quantity: 1,
-                                );
-                                context
-                                    .read<CartProvider>()
-                                    .addItemToCart(cartItem);
-                                SideSheet.left(
-                                  body: ProduitScreen(product: selectedProduct),
-                                  context: context,
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ProductCard(
-                                  product: product![index],
-                                ),
-                              ),
-                            );
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  var selectedProduct = product[index];
+
+                                  SideSheet.left(
+                                    body:
+                                        ProduitScreen(product: selectedProduct),
+                                    context: context,
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ProductCard(
+                                    product: product[index],
+                                  ),
+                                ));
                           },
                         ),
                       ),
                     ],
+              ),
                   ),
                 ),
-              ),
             ],
           );
         },

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:menu_digitale_tablette/views/pages/historique/commande_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/suivi_commande_et_jeux/suivie_commande_jeux_screen.dart';
 
 class SuccessDialog extends StatelessWidget {
   const SuccessDialog({Key? key}) : super(key: key);
@@ -17,6 +19,9 @@ class SuccessDialog extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => SuivieDeCommandeEtJeuxScreen(),
+                          ),);
             },
             child: const Text('Suivre votre commande'),
           ),

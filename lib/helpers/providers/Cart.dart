@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:menu_digitale_tablette/models/cart_model/cart_model.dart';
+import 'package:menu_digitale_tablette/models/cart_model.dart';
 
 class CartProvider extends ChangeNotifier {
   List<Cart> _cartItems = [];
@@ -12,7 +12,7 @@ ChangeNotifier();
 }
 
   void addItemToCart(Cart item) {
-  bool itemExists = false;
+  /*bool itemExists = false;
   for (var product in cartItems) {
     if (product.productId == item.productId) {
       product.quantity++;
@@ -20,15 +20,15 @@ ChangeNotifier();
       break;
     }
   }
-  if (!itemExists) {
+  if (!itemExists) {*/
     _cartItems.add(item);
-  }
+  //}
   notifyListeners();
 }
 
 
-  void removeItemFromCart(int productId) {
-    _cartItems.removeWhere((item) => item.productId == productId);
+  void removeItemFromCart(index) {
+    _cartItems.remove(_cartItems[index]);
     notifyListeners();
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
-import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
+import 'package:menu_digitale_tablette/models/product_model/Product.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

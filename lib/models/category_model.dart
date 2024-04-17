@@ -1,4 +1,4 @@
-import 'package:menu_digitale_tablette/models/product_model/product_model.dart';
+import 'package:menu_digitale_tablette/models/product_model/Product.dart';
 
 class Category {
   int currentPage = 1;
@@ -21,13 +21,13 @@ class Category {
     required this.isDisplayed,
     required this.createdAt,
     required this.updatedAt,
-  }) : product = []; // Initializing the product list as an empty list
+  }) : product = []; 
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       id: json['id'] ?? 0,
       digitalMenuFormulesId: json['digital_menu_formules_id'] ?? 0,
-      name: json['name'] ?? '',
+      name: json['name'] ?? '', 
       order: json['order'] ?? 0,
       isDisplayed: json['is_displayed'] ?? 0,
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,

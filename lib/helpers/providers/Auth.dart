@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:menu_digitale_tablette/models/establishment_model/Establishment_model.dart';
-import 'package:menu_digitale_tablette/models/professional_model/professional_model.dart';
+import 'package:menu_digitale_tablette/models/Establishment_model.dart';
+import 'package:menu_digitale_tablette/models/professional_model.dart';
 import 'package:menu_digitale_tablette/services/auth/auth_api.dart';
 
 
