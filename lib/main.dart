@@ -9,9 +9,12 @@ import 'package:menu_digitale_tablette/models/cart_model.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/historique/commande_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/historique/history_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/plan_de_table/plan_de_table_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/suivi_commande_et_jeux/suivie_commande_jeux_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/welcome/language_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'controllers/home_layout_controller.dart';
@@ -54,7 +57,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
-          home: LoginPage()//HistoryScreen()//PlanDeTableScreen() //CommandHistoryScreen() TableSelectionScreen()//PinCodeScreen() ,
+          home: /*Language() */LoginPage()//HistoryScreen()//PlanDeTableScreen() //CommandHistoryScreen() TableSelectionScreen()//PinCodeScreen() ,
         ),
       ),
     );

@@ -78,7 +78,7 @@ class PanierScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     (cartProvider.cartItems[index].price * cartProvider.cartItems[index].quantity)
-                                        .toString(),
+                                        .toStringAsFixed(2),
                                     style: subhead.copyWith(
                                       fontWeight: FontWeight.w600,
                                     ),

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:menu_digitale_tablette/models/Groups.dart';
-import 'package:menu_digitale_tablette/models/Options.dart';
+import 'package:menu_digitale_tablette/models/product_model/Groups.dart';
+import 'package:menu_digitale_tablette/models/product_model/Options.dart';
 import 'package:menu_digitale_tablette/models/category_model.dart';
 import 'package:menu_digitale_tablette/models/product_model/Product.dart';
 import 'package:menu_digitale_tablette/services/auth/category_api.dart';
@@ -43,6 +43,20 @@ class Products extends ChangeNotifier {
   total = product.priceByUnit + optionsTotal;
   notifyListeners();
 }
+
+void updateSelectedOptions(int groupIndex, int optionIndex, List<int> selectedOptions, List<EstablishmentProductOptionGroup>? groups) {
+    if (selectedOptions.contains(optionIndex)) {
+      selectedOptions.remove(optionIndex);
+    } else {
+      if (selectedOptions.length < groups![groupIndex].maximumChoose) {
+        selectedOptions.add(optionIndex);
+      }
+    }
+    notifyListeners();
+}
+
+
+
 
 
   Future<void> fetchcategory(int establishmentId) async {

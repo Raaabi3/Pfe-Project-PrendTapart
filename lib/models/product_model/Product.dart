@@ -1,5 +1,5 @@
-import 'package:menu_digitale_tablette/models/Groups.dart';
-import 'package:menu_digitale_tablette/models/Options.dart';
+import 'package:menu_digitale_tablette/models/product_model/Groups.dart';
+import 'package:menu_digitale_tablette/models/product_model/Options.dart';
 
 class Product {
   final int id;
