@@ -3,6 +3,8 @@ import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
+import 'package:menu_digitale_tablette/views/pages/welcome/language_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
 class EstablishmentsScreen extends StatefulWidget {
@@ -52,7 +54,7 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
+                            builder: (context) => WelcomeScreen(),
                           ),
                         );
                       } else {

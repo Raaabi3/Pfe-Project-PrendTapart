@@ -28,8 +28,8 @@ class EstablishmentProductOptionGroup {
       type: json['type'] ?? '',
       establishmentId: json['establishment_id'] ?? 0,
       is_required:json['is_required'] ?? 0,
-options: json['options'] != null
-        ? List<EstablishmentProductOption>.from(json['options'].map((option) => EstablishmentProductOption.fromJson(option)))
+options: json['establishmentproductoptions'] != null
+        ? List<EstablishmentProductOption>.from(json['establishmentproductoptions'].map((option) => EstablishmentProductOption.fromJson(option)))
         : [],    );
   }
 }

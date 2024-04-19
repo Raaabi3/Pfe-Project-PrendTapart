@@ -114,7 +114,7 @@ class HomeScreen extends StatelessWidget {
                                       const SizedBox(height: 3),
                                       Text(
                                         cartProvider.cartItems[index].price
-                                            .toString(),
+                                            .toStringAsFixed(2),
                                         style: subhead.copyWith(
                                           fontWeight: FontWeight.w600,
                                         ),

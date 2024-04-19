@@ -65,7 +65,6 @@ class Product {
   });
 
 factory Product.fromJson(Map<String, dynamic> json) { 
-  
   return Product(
     id: json['id'] ?? 0,
     name: json['name'] ?? '',
@@ -95,8 +94,9 @@ factory Product.fromJson(Map<String, dynamic> json) {
     qteForOneRec: json['qte_for_one_rec'] ?? 0,
     establishmentProducts: List<Map<String, dynamic>>.from(json['establishment_products'] ?? []),
     priceByUnit: json['establishment_products']?.isNotEmpty == true ? double.tryParse(json['establishment_products'][0]['price_by_unit'].toString()) ?? 0.0 : 0.0,
-    groups: List<EstablishmentProductOptionGroup>.from(json['establishment_product_option_groups'] != null ? List<EstablishmentProductOptionGroup>.from(json['establishment_product_option_groups']) : []),
+    groups: json['establishment_products']?.isNotEmpty == true ? List<EstablishmentProductOptionGroup>.from(json['establishment_products'][0]['establishment_product_option_groups']?.map((group) => EstablishmentProductOptionGroup.fromJson(group)) ?? []) : [],
   );
 }
+
 
 }

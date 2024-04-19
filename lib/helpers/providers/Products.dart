@@ -7,6 +7,7 @@ import 'package:menu_digitale_tablette/models/category_model.dart';
 import 'package:menu_digitale_tablette/models/product_model/Product.dart';
 import 'package:menu_digitale_tablette/services/auth/category_api.dart';
 import 'package:menu_digitale_tablette/services/auth/products_api.dart';
+import 'package:pinput/pinput.dart';
 
 class Products extends ChangeNotifier {
   String? token;
@@ -14,6 +15,54 @@ class Products extends ChangeNotifier {
   List<Category> categories = [];
   Category? selectedCategory;
   double total = 0.0;
+  List<Map<String, dynamic>> selectedOptionsList = [];
+
+  void selectedoption(bool isSelected, Product product, EstablishmentProductOption option, int groupIndex) {
+    final selectedGroup = product.groups![groupIndex];
+    final selectedOptionsCount = selectedOptionsList.where((element) => element['group'] == selectedGroup).length;
+
+    if (isSelected) {
+      selectedOptionsList.removeWhere((element) =>
+          element['group'] == selectedGroup &&
+          element['option'] == option);
+    } else {
+      if (selectedOptionsCount < selectedGroup.maximumChoose) {
+        selectedOptionsList.add({
+          'group': selectedGroup,
+          'option': option,
+        });
+      } else {
+        print('Maximum choose limit reached for this group!');
+      }
+    }
+    notifyListeners();
+  }
+
+  bool isButtonEnabled(Product product) {
+    // Check if all required groups have at least one selected option
+    for (final group in product.groups!) {
+      if (group.is_required == 1 &&
+          !selectedOptionsList.any((element) => element['group'] == group)) {
+        return false; // Disable the button if any required group has no selected option
+      }
+    }
+    // Enable the button if there are no required groups or all required groups have at least one selected option
+    return true;
+  }
+
+  double calculateTotalPrice(Product product) {
+    double totalPrice = product.priceByUnit; // Initialize with the base price of the product
+    // Iterate over selected options and add their prices to the total
+    for (final selectedOption in selectedOptionsList) {
+      final option = selectedOption['option'] as EstablishmentProductOption?;
+      if (option != null) {
+        totalPrice += option.price;
+      }
+    }
+    return totalPrice;
+  }
+  
+
 
   void nextpage() {
     selectedCategory!.currentPage++;
@@ -29,35 +78,6 @@ class Products extends ChangeNotifier {
     token = newToken;
     notifyListeners();
   }
-  
-
-  void getTotalPrice(Product product, List<List<int>> selectedOptions) {
-  double optionsTotal = 0;
-  for (var groupIndex = 0; groupIndex < selectedOptions.length; groupIndex++) {
-    final groupSelectedOptions = selectedOptions[groupIndex];
-    for (var optionIndex in groupSelectedOptions) {
-      optionsTotal += product.groups![groupIndex].options![optionIndex].price;
-    }
-  }
-
-  total = product.priceByUnit + optionsTotal;
-  notifyListeners();
-}
-
-void updateSelectedOptions(int groupIndex, int optionIndex, List<int> selectedOptions, List<EstablishmentProductOptionGroup>? groups) {
-    if (selectedOptions.contains(optionIndex)) {
-      selectedOptions.remove(optionIndex);
-    } else {
-      if (selectedOptions.length < groups![groupIndex].maximumChoose) {
-        selectedOptions.add(optionIndex);
-      }
-    }
-    notifyListeners();
-}
-
-
-
-
 
   Future<void> fetchcategory(int establishmentId) async {
     try {
@@ -101,25 +121,6 @@ void updateSelectedOptions(int groupIndex, int optionIndex, List<int> selectedOp
             final productList = (productsData['data'] as List)
                 .map((data) => Product.fromJson(data))
                 .toList();
-
-            for (var product in productList) {
-              for (var establishmentProduct in product.establishmentProducts) {
-                (establishmentProduct['establishment_product_option_groups'] ??
-                        [])
-                    .forEach((groupData) {
-                  product.groups!.add(EstablishmentProductOptionGroup.fromJson(
-                      groupData)
-                    ..options = (groupData['establishmentproductoptions'] !=
-                            null)
-                        ? [
-                            for (var optionData
-                                in groupData['establishmentproductoptions'])
-                              EstablishmentProductOption.fromJson(optionData)
-                          ]
-                        : []);
-                });
-              }
-            }
 
             selectedCategory!.product.addAll(productList);
             productList.forEach((product) {

@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:menu_digitale_tablette/Theme/my_colors.dart';
-
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/views/widgets/dialogs/success_diag.dart';
-
 import 'package:menu_digitale_tablette/views/widgets/parametre/parametre_button.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PanierScreen extends StatelessWidget {
   const PanierScreen({Key? key});
@@ -44,124 +40,175 @@ class PanierScreen extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Expanded( 
+          Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ...List.generate(
-                    _cartprovider.cartItems.length,
-                    (index) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12 , vertical: 7),
-                      child: Consumer<CartProvider>(
-                        builder: (context, cartProvider, _) {
-                          return Row(
-                            children: [
-                              Image.network(
-                                cartProvider.cartItems[index]?.img ?? '',
-                                fit: BoxFit.fill,
-                                height: 60,
-                                width: 50,
+              child:Column(
+  children: [
+    ...List.generate(
+      _cartprovider.cartItems.length,
+      (index) => Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 12, vertical: 7),
+        child: Consumer<CartProvider>(
+          builder: (context, cartProvider, _) {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Image.network(
+                          cartProvider.cartItems[index]?.img ?? '',
+                          fit: BoxFit.fill,
+                          height: 60,
+                          width: 50,
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              cartProvider.cartItems[index].productName,
+                              style: body,
+                            ),
+                            const SizedBox(
+                              height: 3,
+                            ),
+                            Text(
+                              (cartProvider.cartItems[index].price *
+                                      cartProvider
+                                          .cartItems[index].quantity)
+                                  .toStringAsFixed(2),
+                              style: subhead.copyWith(
+                                fontWeight: FontWeight.w600,
                               ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    cartProvider.cartItems[index].productName,
-                                    style: body,
+                            )
+                          ],
+                        ),
+                        Spacer(),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(8),
+                                    color: const Color(0xff3A3244),
                                   ),
-                                  const SizedBox(
-                                    height: 3,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      cartProvider
+                                          .incrementQuantity(index);
+                                    },
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                  Text(
-                                    (cartProvider.cartItems[index].price * cartProvider.cartItems[index].quantity)
-                                        .toStringAsFixed(2),
-                                    style: subhead.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Spacer(),
-                              Row(
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: const Color(0xff3A3244),
-                                    ),
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  cartProvider.cartItems[index].quantity
+                                      .toString(),
+                                  style: subhead,
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(8),
+                                    color: const Color(0xff3A3244),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(6),
                                     child: GestureDetector(
                                       onTap: () {
-                                        cartProvider.incrementQuantity(index);
+                                        cartProvider
+                                            .decrementQuantity(index);
                                       },
                                       child: Icon(
-                                        Icons.add,
+                                        Icons.remove,
                                         color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 8,
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(8),
+                                    color: const Color(0xff3A3244),
                                   ),
-                                  Text(
-                                    cartProvider.cartItems[index].quantity.toString(),
-                                    style: subhead,
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: const Color(0xff3A3244),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(6),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          cartProvider.decrementQuantity(index);
-                                        },
-                                        child: Icon(
-                                          Icons.remove,
-                                          color: Colors.white,
-                                        ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(6),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        cartProvider
+                                            .removeItemFromCart(index);
+                                      },
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: const Color(0xff3A3244),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(6),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          cartProvider.removeItemFromCart(index);
-                                        },
-                                        child: Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
-                                        ),
+                                ),
+                              ],
+                            ),
+                            if (cartProvider.cartItems[index].selectedOptionsList !=
+                                null)
+                              Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: cartProvider
+                                    .cartItems[index].selectedOptionsList
+                                    .map<Widget>((option) {
+                                  return Row(
+                                    children: [
+                                      Text(
+                                        '${option['group'].name}: ${option['option'].name}',
+                                        style: body, 
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          );
-                        },
-                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.remove_circle),
+                                        onPressed: () {
+                                          cartProvider.removeItemFromGroup(
+                                              index,
+                                              option['group'],
+                                              option['option']);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                          ],
+                        )
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+            );
+          },
+        ),
+      ),
+    ),
+  ],
+),
+
             ),
           ),
           SizedBox(height: 10),
@@ -203,4 +250,3 @@ class PanierScreen extends StatelessWidget {
     );
   }
 }
-

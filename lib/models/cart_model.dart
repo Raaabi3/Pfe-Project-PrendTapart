@@ -2,8 +2,10 @@ class Cart {
   final int productId;
   final String productName;
   final String img;
-  final double price;
+  double price;
   int quantity;
+  List<Map<String, dynamic>> selectedOptionsList =[];
+
 
   Cart({
     required this.productId,
@@ -11,5 +13,6 @@ class Cart {
     required this.img,
     required this.price,
     required this.quantity,
+    required this.selectedOptionsList,
   });
 }

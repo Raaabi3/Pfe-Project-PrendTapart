@@ -4,60 +4,20 @@ import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/models/cart_model.dart';
+import 'package:menu_digitale_tablette/models/product_model/Options.dart';
 import 'package:menu_digitale_tablette/models/product_model/Product.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class ProduitScreen extends StatefulWidget {
+class ProduitScreen extends StatelessWidget {
   final Product product;
   ProduitScreen({Key? key, required this.product}) : super(key: key);
 
   @override
-  _ProduitScreenState createState() => _ProduitScreenState();
-}
-
-class _ProduitScreenState extends State<ProduitScreen> {
-  List<List<int>> selectedOptions = [];
-
-  @override
-  void initState() {
-    super.initState();
-    selectedOptions =
-        List.generate(widget.product.groups!.length, (index) => []);
-  }
-
-  bool isAddToCartDisabled() {
-    for (var groupIndex = 0;
-        groupIndex < widget.product.groups!.length;
-        groupIndex++) {
-      var group = widget.product.groups![groupIndex];
-      if (group.is_required == 1 && selectedOptions[groupIndex].isEmpty) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  void addToCart(BuildContext context, double total) {
-    final CartProvider cartProvider =
-        Provider.of<CartProvider>(context, listen: false);
-
-    Cart cartItem = Cart(
-      productId: widget.product.id,
-      productName: widget.product.name,
-      quantity: 1,
-      price: total,
-      img: widget.product.img,
-    );
-
-    cartProvider.addItemToCart(cartItem);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Product added to cart'),
-    ));
-  }
-
   Widget build(BuildContext context) {
     final Products prodProvider = Provider.of<Products>(context);
+    final CartProvider cartProvider = Provider.of<CartProvider>(context);
+    double totalPrice = 0.0;
 
     return Scaffold(
       bottomNavigationBar: Container(
@@ -70,8 +30,10 @@ class _ProduitScreenState extends State<ProduitScreen> {
             children: [
               Consumer<Products>(
                 builder: (context, provider, child) {
+                  totalPrice = prodProvider.calculateTotalPrice(product);
+
                   return Text(
-                    prodProvider.total.toStringAsFixed(2) + "€",
+                    totalPrice.toStringAsFixed(2) + "€",
                     style: headline,
                   );
                 },
@@ -79,11 +41,12 @@ class _ProduitScreenState extends State<ProduitScreen> {
               Row(
                 children: [
                   ElevatedButton(
-                    onPressed: isAddToCartDisabled()
-                        ? null
-                        : () {
-                            addToCart(context, prodProvider.total);
-                          },
+                    onPressed: prodProvider.isButtonEnabled(product)
+                        ? () {
+                            cartProvider.addItemToCart(
+                                product, totalPrice, prodProvider.selectedOptionsList);
+                          }
+                        : null,
                     child: const Text('Add To cart'),
                   ),
                 ],
@@ -92,141 +55,118 @@ class _ProduitScreenState extends State<ProduitScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Image.network(
-              widget.product.img,
-              fit: BoxFit.fill,
-              height: 30.h,
-              width: double.infinity,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    widget.product.name,
-                    style: headline,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    widget.product.description,
-                    style: body,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  for (var groupIndex = 0;
-                      groupIndex < widget.product.groups!.length;
-                      groupIndex++)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Quelle ${widget.product.groups![groupIndex].name} ?",
-                          style: subhead.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Choisissez jusqu'à ${widget.product.groups![groupIndex].maximumChoose}",
-                          style: body,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: List.generate(
-                              widget
-                                  .product.groups![groupIndex].options!.length,
-                              (optionIndex) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Provider.of<Products>(context,
-                                            listen: false)
-                                        .updateSelectedOptions(
-                                            groupIndex,
-                                            optionIndex,
-                                            selectedOptions[groupIndex],
-                                            widget.product.groups!);
-                                                                                prodProvider.getTotalPrice(widget.product, selectedOptions);
-
-                                  },
-                                  behavior: HitTestBehavior.translucent,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: selectedOptions[groupIndex]
-                                              .contains(optionIndex)
-                                          ? const Color(0xff3A3244)
-                                          : null,
-                                      border: Border.all(color: greyColor),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 15),
-                                      child: Row(
-                                        children: [
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            widget.product.groups![groupIndex]
-                                                .options![optionIndex].name,
-                                            style: body.copyWith(
-                                              fontWeight: FontWeight.w500,
-                                              color: selectedOptions[groupIndex]
-                                                      .contains(optionIndex)
-                                                  ? Colors.white
-                                                  : null,
-                                            ),
+      body: ListView(
+        children: [
+          Column(
+            children: [
+              Image.network(
+                product.img,
+                fit: BoxFit.fill,
+                height: 30.h,
+                width: double.infinity,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      product.name,
+                      style: headline,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      product.description,
+                      style: body,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: product.groups!.length,
+                      itemBuilder: (BuildContext context, int groupIndex) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Quelle ${product.groups![groupIndex].name} ?",
+                              style: subhead.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Choisissez jusqu'à ${product.groups![groupIndex].maximumChoose}",
+                              style: body,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: List.generate(
+                                  product.groups![groupIndex].options!.length,
+                                  (optionIndex) {
+                                    final option = product.groups![groupIndex].options![optionIndex];
+                                    final isSelected = prodProvider.selectedOptionsList.any((element) =>
+                                        element['group'] == product.groups![groupIndex] &&
+                                        element['option'] == option);
+                                    return GestureDetector(
+                                      onTap: () {
+                                        prodProvider.selectedoption(isSelected, product, option, groupIndex);
+                                      },
+                                      behavior: HitTestBehavior.translucent,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: isSelected ? Colors.blue : Colors.grey,
                                           ),
-                                          const SizedBox(width: 5),
-                                          Container(
-                                            color: greyColor,
-                                            width: 1,
-                                            height: 20,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            "${widget.product.groups![groupIndex].options![optionIndex].price}€",
-                                            style: body.copyWith(
-                                              fontWeight: FontWeight.w500,
-                                              color: selectedOptions[groupIndex]
-                                                      .contains(optionIndex)
-                                                  ? Colors.white
-                                                  : null,
+                                          borderRadius: BorderRadius.circular(8),
+                                          color: isSelected ? Colors.blue.withOpacity(0.3) : null,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              option.name,
+                                              style: TextStyle(fontWeight: FontWeight.bold),
                                             ),
-                                          )
-                                        ],
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "${option.price}€",
+                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                ],
+                  ],
+                ),
               ),
-            )
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

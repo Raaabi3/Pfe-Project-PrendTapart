@@ -1,40 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/welcome/language_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/welcome/loginform.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  
-  
-Route _createRoute() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => LoginForm(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.easeInOutQuart;
-
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-        var offsetAnimation = animation.drive(tween);
-
-        return SlideTransition(
-          position: offsetAnimation,
-          child: child,
-        );
-      },
-    );
-  }
-
-  
-  
-  
-  
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.9), // Greyish background
+          color: Colors.grey.withOpacity(0.9),
           image: DecorationImage(
             image: AssetImage("assets/images/home.png"),
             fit: BoxFit.cover,
@@ -67,29 +41,29 @@ Route _createRoute() {
                         ),
                         SizedBox(width: 10),
                         ElevatedButton(
-                          onPressed: () {                        Navigator.of(context).push(_createRoute());
- },
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginForm()),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  5), // Set border radius to 0 for square look
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                            backgroundColor: Colors.grey[
-                                800], // Set the button's background color to grey shade 800
+                            backgroundColor: Colors.grey[800],
                           ),
                           child: Text(
-                            textAlign:
-                                TextAlign.left, // Set text alignment to left
-
+                            textAlign: TextAlign.left,
                             'Login',
                             style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                height: 1.5, // Adjust line height
+                                height: 1.5,
                                 letterSpacing: 0.5,
-                                color: Colors.white // Adjust letter spacing
-                                ),
+                                color: Colors.white),
                           ),
                         ),
                       ],
@@ -138,19 +112,23 @@ Route _createRoute() {
                           fontFamily: 'Poppins',
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          height: 1.5, // Adjust line height
-                          letterSpacing: 0.5, // Adjust letter spacing
-                          color: Colors.white, // Adjust text color
+                          height: 1.5,
+                          letterSpacing: 0.5,
+                          color: Colors.white,
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Language()),
+                            );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
-                          padding: EdgeInsets.fromLTRB(
-                              20, 10, 20, 10), // Adjust padding
-                          minimumSize:
-                              Size(212, 48), // Set fixed width and height
+                          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                          minimumSize: Size(212, 48),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8),
@@ -159,8 +137,8 @@ Route _createRoute() {
                               bottomRight: Radius.zero,
                             ),
                           ),
-                          side: BorderSide.none, // Remove button border
-                          elevation: 0, // Remove button elevation
+                          side: BorderSide.none,
+                          elevation: 0,
                         ),
                         child: Text(
                           "Démarrer",
@@ -169,8 +147,8 @@ Route _createRoute() {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
-                            height: 1.5, // Adjust line height
-                            letterSpacing: 0.5, // Adjust letter spacing
+                            height: 1.5,
+                            letterSpacing: 0.5,
                           ),
                         ),
                       ),

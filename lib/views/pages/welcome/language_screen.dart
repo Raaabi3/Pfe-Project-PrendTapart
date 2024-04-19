@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/welcome/welcome_screen.dart';
 
 class Language extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ class _LanguageState extends State<Language> {
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.9),
           image: DecorationImage(
-            image: AssetImage("assets/images/login.jpeg"),
+            image: AssetImage("assets/images/login.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -68,10 +70,19 @@ class _LanguageState extends State<Language> {
               SizedBox(
                 height: 20,
               ), 
-              Image.asset(
-                "assets/images/foodeatupservice.png",
-                width: 503,
-                height: 240,
+              GestureDetector(
+                onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WelcomeScreen()),
+                            );
+                          },
+                child: Image.asset(
+                  "assets/images/foodeatupservice.png",
+                  width: 503,
+                  height: 240,
+                ),
               ),
               SizedBox(
                 height: 20,
@@ -88,7 +99,11 @@ class _LanguageState extends State<Language> {
                         setState(() {
                           selectedLanguageIndex = index;
                         });
-                        print('Selected language: $language');
+                        Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()),
+                            );
                       },
                       child: Text(language),
                       style: ElevatedButton.styleFrom(
