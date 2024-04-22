@@ -15,52 +15,54 @@ class Products extends ChangeNotifier {
   List<Category> categories = [];
   Category? selectedCategory;
   double total = 0.0;
-  List<Map<String, dynamic>> selectedOptionsList = [];
+List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>> selectedOptionsList = [];
 
-  void selectedoption(bool isSelected, Product product, EstablishmentProductOption option, int groupIndex) {
-    final selectedGroup = product.groups![groupIndex];
-    final selectedOptionsCount = selectedOptionsList.where((element) => element['group'] == selectedGroup).length;
+void selectedoption(bool isSelected, Product product, EstablishmentProductOption option, EstablishmentProductOptionGroup group) {
+  final selectedOptionsCount = selectedOptionsList.where((element) => element.keys.contains(group)).length;
 
-    if (isSelected) {
-      selectedOptionsList.removeWhere((element) =>
-          element['group'] == selectedGroup &&
-          element['option'] == option);
+  if (isSelected) {
+    selectedOptionsList.removeWhere((element) => element[group] == option);
+  } else {
+    if (selectedOptionsCount < group.maximumChoose) {
+      selectedOptionsList.add({
+        group: option,
+      });
     } else {
-      if (selectedOptionsCount < selectedGroup.maximumChoose) {
-        selectedOptionsList.add({
-          'group': selectedGroup,
-          'option': option,
-        });
-      } else {
-        print('Maximum choose limit reached for this group!');
-      }
+      print('Maximum choose limit reached for this group!');
     }
-    notifyListeners();
   }
+    total = calculateTotalPrice(product);
+
+  notifyListeners();
+}
+
+
 
   bool isButtonEnabled(Product product) {
-    // Check if all required groups have at least one selected option
-    for (final group in product.groups!) {
-      if (group.is_required == 1 &&
-          !selectedOptionsList.any((element) => element['group'] == group)) {
-        return false; // Disable the button if any required group has no selected option
-      }
+  for (final group in product.groups!) {
+    if (group.is_required == 1 &&
+        !selectedOptionsList.any((element) =>
+            element.keys.first == group)) {
+      return false;
     }
-    // Enable the button if there are no required groups or all required groups have at least one selected option
-    return true;
   }
+  return true;
+}
 
-  double calculateTotalPrice(Product product) {
-    double totalPrice = product.priceByUnit; // Initialize with the base price of the product
-    // Iterate over selected options and add their prices to the total
-    for (final selectedOption in selectedOptionsList) {
-      final option = selectedOption['option'] as EstablishmentProductOption?;
-      if (option != null) {
-        totalPrice += option.price;
-      }
+
+double calculateTotalPrice(Product product) {
+  double totalPrice = product.priceByUnit;
+  for (final selectedOption in selectedOptionsList) {
+    final option = selectedOption.values.first;
+    if (option != null) {
+      totalPrice += option.price;
     }
-    return totalPrice;
   }
+  total = totalPrice; 
+  return totalPrice;
+}
+
+
   
 
 

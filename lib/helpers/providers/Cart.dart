@@ -6,57 +6,54 @@ import 'package:menu_digitale_tablette/models/product_model/Options.dart';
 class CartProvider extends ChangeNotifier {
   List<Cart> _cartItems = [];
   List<Cart> get cartItems => List.from(_cartItems);
-  double total=0.0;
-  List<Map<String, dynamic>> selectedOptionsList = [];
+  double total = 0.0;
 
+  void updatetotal(newtotal) {
+    total = newtotal;
+    ChangeNotifier();
+  }
 
-void updatetotal(newtotal){
-total = newtotal;
-ChangeNotifier();
-}
-
-void removeItemFromGroup(int cartIndex, EstablishmentProductOptionGroup group, EstablishmentProductOption option) {
+  void removeItemFromGroup(int cartIndex, EstablishmentProductOptionGroup group, EstablishmentProductOption option) {
   final cartItem = _cartItems[cartIndex];
-  cartItem.selectedOptionsList.removeWhere((item) {
-    final optionGroup = item['group'] as EstablishmentProductOptionGroup?;
-    final optionItem = item['option'] as EstablishmentProductOption?;
-    return optionGroup == group && optionItem == option;
-  });
-  cartItem.price = cartItem.price-option.price;
-
-  notifyListeners();
-}
-
-
-
-void addItemToCart(product, totalprice, List<Map<String, dynamic>> selectedoptions) {
-  Cart cartItem = Cart(
-    productId: product.id,
-    productName: product.name,
-    quantity: 1,
-    price: totalprice,
-    img: product.img,
-    selectedOptionsList: List<Map<String, dynamic>>.from(selectedoptions),
-  );
-  _cartItems.add(cartItem);
-  notifyListeners();
-  printSelectedOptions(cartItem.selectedOptionsList);
-}
-
-
-  void printSelectedOptions(selectedoptions) {
-  print('Selected Options:');
-  for (final option in selectedoptions) {
-    final group = option['group'] as EstablishmentProductOptionGroup?;
-    final optionItem = option['option'] as EstablishmentProductOption?;
-    if (group != null && optionItem != null) {
-      print('Group: ${group.name}, Option: ${optionItem.name}');
-    }
+  
+  if (group.is_required==0 || (group.is_required==1 && cartItem.selectedOptionsList.where((item) => item.keys.first == group).length > 1)) {
+    cartItem.selectedOptionsList.removeWhere((item) {
+      final optionGroup = item.keys.first;
+      final optionItem = item.values.first;
+      return optionGroup == group && optionItem == option;
+    });
+    cartItem.price -= option.price;
+    notifyListeners();
+  } else {
+    print("Cannot remove item because it's required");
   }
 }
 
 
+  void addItemToCart(product, totalprice, List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>> selectedoptions) {
+    Cart cartItem = Cart(
+      productId: product.id,
+      productName: product.name,
+      quantity: 1,
+      price: totalprice,
+      img: product.img,
+      selectedOptionsList: List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>>.from(selectedoptions),
+    );
+    _cartItems.add(cartItem);
+    notifyListeners();
+    printSelectedOptions(cartItem.selectedOptionsList);
+  }
 
+  void printSelectedOptions(selectedoptions) {
+    print('Selected Options:');
+    for (final option in selectedoptions) {
+      final group = option.keys.first;
+      final optionItem = option.values.first;
+      if (group != null && optionItem != null) {
+        print('Group: ${group.name}, Option: ${optionItem.name}');
+      }
+    }
+  }
 
   void removeItemFromCart(index) {
     _cartItems.remove(_cartItems[index]);
@@ -81,7 +78,7 @@ void addItemToCart(product, totalprice, List<Map<String, dynamic>> selectedoptio
   }
 
   void decrementQuantity(int index) {
-    if (cartItems[index].quantity >1 ) {
+    if (cartItems[index].quantity > 1) {
       cartItems[index].quantity--;
       notifyListeners();
     }

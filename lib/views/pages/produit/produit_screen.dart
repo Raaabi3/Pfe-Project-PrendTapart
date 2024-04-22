@@ -17,7 +17,6 @@ class ProduitScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Products prodProvider = Provider.of<Products>(context);
     final CartProvider cartProvider = Provider.of<CartProvider>(context);
-    double totalPrice = 0.0;
 
     return Scaffold(
       bottomNavigationBar: Container(
@@ -30,8 +29,7 @@ class ProduitScreen extends StatelessWidget {
             children: [
               Consumer<Products>(
                 builder: (context, provider, child) {
-                  totalPrice = prodProvider.calculateTotalPrice(product);
-
+                  final totalPrice = prodProvider.calculateTotalPrice(product);
                   return Text(
                     totalPrice.toStringAsFixed(2) + "€",
                     style: headline,
@@ -44,10 +42,10 @@ class ProduitScreen extends StatelessWidget {
                     onPressed: prodProvider.isButtonEnabled(product)
                         ? () {
                             cartProvider.addItemToCart(
-                                product, totalPrice, prodProvider.selectedOptionsList);
+                                product, prodProvider.calculateTotalPrice(product), prodProvider.selectedOptionsList);
                           }
                         : null,
-                    child: const Text('Add To cart'),
+                    child: const Text('Add To Cart'),
                   ),
                 ],
               )
@@ -70,58 +68,47 @@ class ProduitScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Text(
                       product.name,
                       style: headline,
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 5),
                     Text(
                       product.description,
                       style: body,
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
+                    const SizedBox(height: 15),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: product.groups!.length,
                       itemBuilder: (BuildContext context, int groupIndex) {
+                        final group = product.groups![groupIndex];
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Quelle ${product.groups![groupIndex].name} ?",
+                              "Quelle ${group.name} ?",
                               style: subhead.copyWith(fontWeight: FontWeight.w600),
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
+                            const SizedBox(height: 5),
                             Text(
-                              "Choisissez jusqu'à ${product.groups![groupIndex].maximumChoose}",
+                              "Choisissez jusqu'à ${group.maximumChoose}",
                               style: body,
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            const SizedBox(height: 10),
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: List.generate(
-                                  product.groups![groupIndex].options!.length,
+                                  group.options!.length,
                                   (optionIndex) {
-                                    final option = product.groups![groupIndex].options![optionIndex];
-                                    final isSelected = prodProvider.selectedOptionsList.any((element) =>
-                                        element['group'] == product.groups![groupIndex] &&
-                                        element['option'] == option);
+                                    final option = group.options![optionIndex];
+                                    final isSelected = prodProvider.selectedOptionsList.any((element) => element[group] == option);
                                     return GestureDetector(
                                       onTap: () {
-                                        prodProvider.selectedoption(isSelected, product, option, groupIndex);
+                                        prodProvider.selectedoption(isSelected, product, option, group);
                                       },
                                       behavior: HitTestBehavior.translucent,
                                       child: Container(
@@ -154,9 +141,7 @@ class ProduitScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            const SizedBox(height: 20),
                           ],
                         );
                       },

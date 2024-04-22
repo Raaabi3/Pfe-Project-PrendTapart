@@ -13,207 +13,144 @@ class PanierScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CartProvider _cartprovider = Provider.of<CartProvider>(context);
-    final Products prodprovider = Provider.of<Products>(context);
 
-    int qte = 1;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Ma commande",
+          style: headline,
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            color: Color(0xffEDEDED),
-            height: 100,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_back_ios),
-                  Spacer(),
-                  Text(
-                    "Ma commande",
-                    style: headline,
-                  ),
-                  Spacer(),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
           Expanded(
             child: SingleChildScrollView(
-              child:Column(
-  children: [
-    ...List.generate(
-      _cartprovider.cartItems.length,
-      (index) => Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 12, vertical: 7),
-        child: Consumer<CartProvider>(
-          builder: (context, cartProvider, _) {
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Image.network(
-                          cartProvider.cartItems[index]?.img ?? '',
-                          fit: BoxFit.fill,
-                          height: 60,
-                          width: 50,
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: List.generate(
+                  _cartprovider.cartItems.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 7,
+                    ),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            Image.network(
+                              _cartprovider.cartItems[index]?.img ?? '',
+                              fit: BoxFit.fill,
+                              height: 60,
+                              width: 50,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
                             Text(
-                              cartProvider.cartItems[index].productName,
+                              _cartprovider.cartItems[index].productName,
                               style: body,
                             ),
                             const SizedBox(
                               height: 3,
                             ),
                             Text(
-                              (cartProvider.cartItems[index].price *
-                                      cartProvider
-                                          .cartItems[index].quantity)
+                              (_cartprovider.cartItems[index].price *
+                                      _cartprovider.cartItems[index].quantity)
                                   .toStringAsFixed(2),
                               style: subhead.copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
-                            )
-                          ],
-                        ),
-                        Spacer(),
-                        Column(
-                          children: [
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
                             Row(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(8),
-                                    color: const Color(0xff3A3244),
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      cartProvider
-                                          .incrementQuantity(index);
-                                    },
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
+                                IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () {
+                                    _cartprovider.incrementQuantity(index);
+                                  },
                                 ),
                                 Text(
-                                  cartProvider.cartItems[index].quantity
-                                      .toString(),
+                                  _cartprovider.cartItems[index].quantity.toString(),
                                   style: subhead,
                                 ),
-                                const SizedBox(
-                                  width: 8,
+                                IconButton(
+                                  icon: Icon(Icons.remove),
+                                  onPressed: () {
+                                    _cartprovider.decrementQuantity(index);
+                                  },
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(8),
-                                    color: const Color(0xff3A3244),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(6),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        cartProvider
-                                            .decrementQuantity(index);
-                                      },
-                                      child: Icon(
-                                        Icons.remove,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(8),
-                                    color: const Color(0xff3A3244),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(6),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        cartProvider
-                                            .removeItemFromCart(index);
-                                      },
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    _cartprovider.removeItemFromCart(index);
+                                  },
                                 ),
                               ],
                             ),
-                            if (cartProvider.cartItems[index].selectedOptionsList !=
-                                null)
-                              Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: cartProvider
-                                    .cartItems[index].selectedOptionsList
-                                    .map<Widget>((option) {
-                                  return Row(
-                                    children: [
-                                      Text(
-                                        '${option['group'].name}: ${option['option'].name}',
-                                        style: body, 
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.remove_circle),
-                                        onPressed: () {
-                                          cartProvider.removeItemFromGroup(
-                                              index,
-                                              option['group'],
-                                              option['option']);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                }).toList(),
-                              ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                            if (_cartprovider.cartItems[index].selectedOptionsList != null)
+  ..._cartprovider.cartItems[index].selectedOptionsList.map<Widget>((optionMap) {
+    final group = optionMap.keys.first;
+    final option = optionMap.values.first;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            children: [
+              Text(
+                '${group.name}: ',
+                style: body.copyWith(fontWeight: FontWeight.bold),
               ),
-            );
-          },
+              Text(
+                option.name,
+                style: body,
+              ),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.remove_circle),
+                onPressed: () {
+                  _cartprovider.removeItemFromGroup(index, group, option);
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-    ),
-  ],
-),
-
+        if (group.is_required==1 && _cartprovider.cartItems[index].selectedOptionsList.where((map) => map.keys.first == group).length == 1)
+          Padding(
+            padding: const EdgeInsets.only(left: 24),
+            child: Text(
+              'At least one option is required',
+              style: TextStyle(color: Colors.red),
             ),
           ),
-          SizedBox(height: 10),
+      ],
+    );
+  }).toList(),
+],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: ParametreButton(
               buttonText: "Passer Commande",
               onTap: () {
@@ -228,9 +165,6 @@ class PanierScreen extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ParametreButton(
@@ -243,7 +177,7 @@ class PanierScreen extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 50,
+            height: 20,
           ),
         ],
       ),
