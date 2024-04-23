@@ -16,6 +16,7 @@ class Product {
   final DateTime? dlc;
   final String ref;
   final String img;
+  final String imgcover;
   final bool isRec;
   final bool isIng;
   final bool showHome;
@@ -47,6 +48,7 @@ class Product {
      this.dlc,
      this.ref='',
      this.img='',
+     this.imgcover='',
      this.isRec=false,
      this.isIng=false,
      this.showHome=false,
@@ -61,7 +63,7 @@ class Product {
      this.recetteId= 0,
      this.establishmentProductRecId= 0,
      this.qteForOneRec = 0,
-    this.groups,
+     this.groups,
   });
 
 factory Product.fromJson(Map<String, dynamic> json) { 
@@ -78,6 +80,7 @@ factory Product.fromJson(Map<String, dynamic> json) {
     dlc: json['dlc'] != null ? DateTime.parse(json['dlc'] ?? '') : DateTime.now(),
     ref: json['ref'] ?? '',
     img: json['img'] ?? '',
+    imgcover: json['img_cover'] ?? '',
     isRec: json['is_rec'] == 1,
     isIng: json['is_ing'] == 1,
     showHome: json['show_home'] == 1,

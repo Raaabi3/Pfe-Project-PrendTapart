@@ -36,7 +36,7 @@ class CartProvider extends ChangeNotifier {
       productName: product.name,
       quantity: 1,
       price: totalprice,
-      img: product.img,
+      img: product.establishmentProducts.isNotEmpty ? product.establishmentProducts[0]['img'] : '',
       selectedOptionsList: List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>>.from(selectedoptions),
     );
     _cartItems.add(cartItem);

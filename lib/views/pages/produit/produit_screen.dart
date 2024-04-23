@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_colors.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
@@ -6,8 +7,11 @@ import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/models/cart_model.dart';
 import 'package:menu_digitale_tablette/models/product_model/Options.dart';
 import 'package:menu_digitale_tablette/models/product_model/Product.dart';
+import 'package:menu_digitale_tablette/views/widgets/product/product_imageoverlay.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:side_sheet/side_sheet.dart';
 
 class ProduitScreen extends StatelessWidget {
   final Product product;
@@ -42,7 +46,9 @@ class ProduitScreen extends StatelessWidget {
                     onPressed: prodProvider.isButtonEnabled(product)
                         ? () {
                             cartProvider.addItemToCart(
-                                product, prodProvider.calculateTotalPrice(product), prodProvider.selectedOptionsList);
+                                product,
+                                prodProvider.calculateTotalPrice(product),
+                                prodProvider.selectedOptionsList);
                           }
                         : null,
                     child: const Text('Add To Cart'),
@@ -57,14 +63,66 @@ class ProduitScreen extends StatelessWidget {
         children: [
           Column(
             children: [
-              Image.network(
-                product.img,
-                fit: BoxFit.fill,
-                height: 30.h,
-                width: double.infinity,
+              CarouselSlider(
+  options: CarouselOptions(
+    autoPlay: true,
+    aspectRatio: 20 / 10,
+    animateToClosest: true,
+    enlargeFactor: 0.3,
+    enlargeCenterPage: true,
+    autoPlayAnimationDuration: const Duration(milliseconds: 800),
+  ),
+  items: prodProvider.generateStaticCarouselImages(product.establishmentProducts).map((imageUrl) {
+    return Builder(
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
               ),
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {/*
+                    SideSheet.right(
+                                    body:
+                                        ImageOverlay(
+                          imageUrls: prodProvider.generateStaticCarouselImages(),
+                          initialIndex: prodProvider.generateStaticCarouselImages().indexOf(imageUrl),
+                        ),
+                                    context: context,
+                                  );*/
+                                  
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ImageOverlay(
+                          imageUrls: prodProvider.generateStaticCarouselImages(product.establishmentProducts),
+                          initialIndex: prodProvider.generateStaticCarouselImages(product.establishmentProducts).indexOf(imageUrl),
+                        ),
+                      ),
+                      
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }).toList(),
+),
+
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -90,7 +148,8 @@ class ProduitScreen extends StatelessWidget {
                           children: [
                             Text(
                               "Quelle ${group.name} ?",
-                              style: subhead.copyWith(fontWeight: FontWeight.w600),
+                              style:
+                                  subhead.copyWith(fontWeight: FontWeight.w600),
                             ),
                             const SizedBox(height: 5),
                             Text(
@@ -105,33 +164,46 @@ class ProduitScreen extends StatelessWidget {
                                   group.options!.length,
                                   (optionIndex) {
                                     final option = group.options![optionIndex];
-                                    final isSelected = prodProvider.selectedOptionsList.any((element) => element[group] == option);
+                                    final isSelected = prodProvider
+                                        .selectedOptionsList
+                                        .any((element) =>
+                                            element[group] == option);
                                     return GestureDetector(
                                       onTap: () {
-                                        prodProvider.selectedoption(isSelected, product, option, group);
+                                        prodProvider.selectedoption(
+                                            isSelected, product, option, group);
                                       },
                                       behavior: HitTestBehavior.translucent,
                                       child: Container(
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: isSelected ? Colors.blue : Colors.grey,
+                                            color: isSelected
+                                                ? Colors.blue
+                                                : Colors.grey,
                                           ),
-                                          borderRadius: BorderRadius.circular(8),
-                                          color: isSelected ? Colors.blue.withOpacity(0.3) : null,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: isSelected
+                                              ? Colors.blue.withOpacity(0.3)
+                                              : null,
                                         ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 15),
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
                                               option.name,
-                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                             SizedBox(width: 5),
                                             Text(
                                               "${option.price}€",
-                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
                                             )
                                           ],
                                         ),

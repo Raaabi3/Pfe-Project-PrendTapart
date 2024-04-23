@@ -15,7 +15,25 @@ class Products extends ChangeNotifier {
   List<Category> categories = [];
   Category? selectedCategory;
   double total = 0.0;
-List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>> selectedOptionsList = [];
+  List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>> selectedOptionsList = [];
+
+
+List<String> generateStaticCarouselImages(establishmentProducts) {
+
+
+  List<String> imageUrls = [];
+for (var product in establishmentProducts) {
+  if (product['establishment_product_images'] != null) {
+    for (var image in product['establishment_product_images']) {
+      if (image['image'] != null && image['image'].isNotEmpty) {
+        imageUrls.add(image['image']);
+      }
+    }
+  }
+}
+    return imageUrls;
+  }
+
 
 void selectedoption(bool isSelected, Product product, EstablishmentProductOption option, EstablishmentProductOptionGroup group) {
   final selectedOptionsCount = selectedOptionsList.where((element) => element.keys.contains(group)).length;
@@ -125,10 +143,7 @@ double calculateTotalPrice(Product product) {
                 .toList();
 
             selectedCategory!.product.addAll(productList);
-            productList.forEach((product) {
-              print(
-                  '${product.id} - the groups length is: ${product.groups!.length}');
-            });
+           
             nextpage();
           }
         } else {
