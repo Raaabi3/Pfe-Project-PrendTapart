@@ -13,7 +13,7 @@ class ProfessionalController extends Controller
             $establishments = Establishment::whereHas('professionalRoles', function ($query) {
                 $query->where('professional_id', Auth::id());
             })->orWhereHas('company', function ($query) {
-                $query->where('owner_id', Auth::id());
+                $query->where('professionnel_id', Auth::id());
             })->get();
             return response()->json($establishments);
     }

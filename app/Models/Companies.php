@@ -24,12 +24,12 @@ class Companies extends Model
         'state',
         'country',
         'zip_code',
-        'owner_id',
+        'professionnel_id',
     ];
 
     public function professional()
     {
-        return $this->belongsTo(Professional::class, 'owner_id');
+        return $this->belongsTo(Professional::class, 'professionnel_id');
     }
     public function professionals()
     {

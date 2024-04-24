@@ -8,7 +8,7 @@ class EstablishmentProduct extends Model
 {
     use HasFactory;
 
-    protected $table = 'establishment_product';
+    protected $table = 'establishment_products';
 
 
     protected $fillable = [
@@ -37,7 +37,15 @@ class EstablishmentProduct extends Model
         'qte_for_one_rec',
     ];
 
-
+    public function establishmentproductoptionsgroupspivot()
+    {
+        return $this->hasOne(EstablishmentProductOptionsGroupsPivot::class);
+    }
+    public function establishmentProductOptionGroups()
+    {
+        return $this->hasManyThrough(EstablishmentProductOptionGroup::class,EstablishmentProductOptionsGroupsPivot::class,
+        'establishment_product_id','id','id','establishment_product_options_groups_id' );
+    }
     public function establishment()
     {
         return $this->belongsTo(Establishment::class);
@@ -50,20 +58,9 @@ class EstablishmentProduct extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
-    }
-
-    public function establishmentProductExtras()
+    }    public function establishmentProductImages()
     {
-        return $this->hasMany(EstablishmentProductExtra::class, 'establishment_product_id');
-    }
-
-    public function establishmentextras()
-    {
-        return $this->hasManyThrough(EstablishmentExtra::class, EstablishmentProductExtra::class, 'establishment_product_id', 'id', 'id', 'establishment_extra_id');
-    }
-    public function digitalMenuFormulesCategorieProducts()
-    {
-        return $this->hasOne(DigitalMenuFormulesCategorieProduct::class, 'establishment_product_id');
+        return $this->hasMany(EstablishmentProductImage::class, 'establishment_product_id');
     }
 
 

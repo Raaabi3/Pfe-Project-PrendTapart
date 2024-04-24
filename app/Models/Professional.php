@@ -15,7 +15,7 @@ class Professional extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table ='professional';
+    protected $table ='professionals';
     protected $fillable = [
         'first_name',
         'last_name',
@@ -45,7 +45,7 @@ class Professional extends Authenticatable
 
     public function company()
     {
-        return $this->hasOne(Companies::class, 'owner_id');
+        return $this->hasOne(Companies::class, 'professionel_id');
     }
     public function professionalRolesInEstablishment()
     {

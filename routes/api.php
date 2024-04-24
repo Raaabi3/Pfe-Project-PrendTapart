@@ -25,13 +25,10 @@ Route::middleware('auth:sanctum')->prefix('professionals')->group(function () {
     Route::get('/profile',[ProfessionalController::class,'profile']);
 });
 Route::middleware('auth:sanctum')->prefix('establishments')->group(function () {
-    Route::get('/{establishments_id}/products', [EstablishmentProductsController ::class,'getProducts']);
     Route::get('/{product_id}/size', [ProductController ::class,'getProductsize']);
     Route::get('/{estab_id}/extra', [ProductController ::class,'getProductextra']);
-    Route::get('/{estab_id}/categoriesproducts', [ProductController ::class,'getProductsByCategoryForEstablishment']);
     Route::get('/{estab_id}/categories', [ProductController ::class,'getcategories']);
-    Route::get('/{category_id}/productcategorie', [ProductController ::class,'getproductsbycategorie']);
-    Route::get('{estab_id}/{prod_id}/options',[ProductController ::class,'getproductsoptions']);
+    Route::get('/{categorie}/Productandoptions', [ProductController ::class,'getProductsAndOptions']);
 
 
 

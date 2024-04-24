@@ -3,90 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\EstablishmentProductSizes;
-use App\Models\DigitalMenuFormulesCategorie;
+use App\Models\Rayons;
 use Illuminate\Http\Request;
 use App\Models\EstablishmentExtra;
 use App\Models\Product;
-use App\Models\EstablishmentProductOption;
 use Exception;
 
 
 class ProductController extends Controller
 {
-    public function getProductsize($product_Id)
-    {
-        $productSizes = EstablishmentProductSizes::whereHas('productsize.product', function ($query) use ($product_Id) {
-            $query->where('id', $product_Id);
-        })->get();
-        return response()->json($productSizes);
-    }
-    public function getProductExtra($productId)
-    {
-        $establishmentExtra = EstablishmentExtra::whereHas('establishmentProductExtras', function ($query) use ($productId) {
-            $query->whereHas('establishmentProduct', function ($innerQuery) use ($productId) {
-                $innerQuery->where('product_id', $productId);
-            });
-        })->get();
 
-        return response()->json($establishmentExtra);
-    }
+public function getCategories($establishmentId)
+{
+    $categories = Rayons::where('establishment_id', $establishmentId)
+        ->get();
+
+    return response()->json($categories);
+}
 
 
-    public function getProductsByCategoryForEstablishment($establishmentId)
-    {
-        $categoriesWithProducts = DigitalMenuFormulesCategorie::with(['digitalMenuFormulesCategorieProducts.establishmentProduct.product' => function ($query) {
-            $query->select('products.*');
-        }])
-            ->whereHas('digitalMenuFormules', function ($query) use ($establishmentId) {
-                $query->where('establishment_id', $establishmentId);
-            })
-            ->get()
-            ->map(function ($category) {
-                $category->digitalMenuFormulesCategorieProducts->transform(function ($product) {
-                    return $product->establishmentProduct->product;
-                });
-                return $category;
-            });
-
-        return response()->json($categoriesWithProducts);
-    }
-
-    public function getCategories($establishmentId)
-    {
-        $categories = DigitalMenuFormulesCategorie::with('digitalMenuFormulesCategorieProducts')->whereHas('digitalMenuFormules', function ($query) use ($establishmentId) {
-                $query->where('establishment_id', $establishmentId);
-            })
-            ->get();
-        return response()->json($categories);
-    }
-    public function getproductsbycategorie($categorie, Request $request)
-    {
-        $products = Product::with('establishmentProducts')
-            ->whereHas('establishmentProducts.digitalMenuFormulesCategorieProducts', function ($query) use ($categorie) {
-                $query->where('digital_menu_formules_categorie_id', $categorie);
-            })
-            ->paginate(3);
-
-        return $products;
-    }
-
-
-
-
-public function getproductsoptions($establishmentId, $productId)
+public function getProductsAndOptions($category, Request $request)
 {
     try {
-        $options = EstablishmentProductOption::with('group')->whereHas('group.pivot', function ($query) use ($productId) {
-            $query->where('establishment_product_id', $productId);
-        })->whereHas('group', function ($query) use ($establishmentId) {
-            $query->where('establishment_id', $establishmentId);
-        })->get();
+        $products = Product::whereHas('establishmentProducts', function ($query) use ($category) {
+                $query->where('rayon_id', $category);
+            })
+            ->with(['establishmentProducts' => function ($query) use ($category) {
+                $query->where('rayon_id', $category)
+                ->with(['establishmentProductOptionGroups.establishmentproductoptions', 'establishmentProductImages']);
+            }])
+            ->paginate(3);
 
-        return response()->json($options);
+        return response()->json([
+            'products' => $products,
+        ]);
     } catch (Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 }
+
+
 
 
 
