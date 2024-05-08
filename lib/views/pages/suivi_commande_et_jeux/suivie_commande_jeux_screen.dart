@@ -56,7 +56,7 @@ class _SuivieDeCommandeEtJeuxScreenState
                 alignment: Alignment.topLeft,
                 child: BackButton(
                   onPressed: () {
-                    context.read<HomeLayoutController>().switchScreen(0);
+                    Navigator.pop(context);
                   },
                 ),
               ),

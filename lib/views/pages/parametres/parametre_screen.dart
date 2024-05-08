@@ -10,6 +10,7 @@ import 'package:menu_digitale_tablette/views/pages/parametres/information_resto_
 import 'package:menu_digitale_tablette/views/pages/parametres/parametre_de_table_popup.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/theme_popup.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
+import 'package:menu_digitale_tablette/views/pages/welcome/loginform.dart';
 import 'package:menu_digitale_tablette/views/widgets/parametre/parametre_item.dart';
 import 'package:provider/provider.dart';
 
@@ -135,7 +136,7 @@ class _ParametreScreenState extends State<ParametreScreen> {
                         if (result.isRight) {
                           showDialog(
                             context: context,
-                            builder: (context) => LoginPage(),
+                            builder: (context) => LoginForm(),
                           );
                         } else {
                           print(result.left);

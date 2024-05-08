@@ -46,8 +46,7 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                       authProvider.selectedestablishment =
                           provider.establishments[index];
                       print('Establishment selected: ${provider.establishments[index].id}');
-                      await prodProvider.fetchcategory(provider.establishments[index].id);
-                      prodProvider.fetchproductbycategory();
+                      await prodProvider.fetchcategoryAndProducts(provider.establishments[index].id);
                       print('Fetched categories: ${prodProvider.categories}');
                       if (prodProvider.categories.isNotEmpty) {
                         print('Navigating to HomeScreen');

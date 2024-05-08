@@ -3,19 +3,14 @@ import 'package:menu_digitale_tablette/controllers/sondage_controller.dart';
 import 'package:menu_digitale_tablette/controllers/theme_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Cart.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Commandes.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
-import 'package:menu_digitale_tablette/models/cart_model.dart';
-import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/historique/commande_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/historique/history_screen.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Screens.dart';
+import 'package:menu_digitale_tablette/models/product_model/Product.dart';
 import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/plan_de_table/plan_de_table_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/suivi_commande_et_jeux/suivie_commande_jeux_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/welcome/language_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/welcome/loginform.dart';
 import 'package:menu_digitale_tablette/views/pages/welcome/welcome_screen.dart';
+import 'package:menu_digitale_tablette/views/widgets/product/product_list.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'controllers/home_layout_controller.dart';
@@ -47,10 +42,17 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProxyProvider<Establishments, Products>(
             create: (context) => Products(),
             update: (_, establishments, products) => products!
-              ..updateProducts()
+              /*..updateProducts()*/
 ..getdata(establishments.token!),
           ),
           ChangeNotifierProvider(create: (_) => CartProvider()),
+          ChangeNotifierProxyProvider<Auth , Commandes>(
+            create: (context) => Commandes(),
+            update:(_,professionalProvider,commandes) => commandes!..getdata(professionalProvider.token!)
+
+          ),
+                    ChangeNotifierProvider(create: (_) => ScreenController()),
+
 
           
 

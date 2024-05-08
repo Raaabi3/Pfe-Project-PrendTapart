@@ -27,8 +27,8 @@ class WelcomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.network(
-                      "https://s3-alpha-sig.figma.com/img/3509/98fc/5926bae03de06c6fdc2fe05b10fbe569?Expires=1714348800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=XUARy0dJBg02~4AFToJ6b63RhOOERNXfsodxaMOJbTocXtlZQjprWjY58UNzSmq~nixWFDvCxsAKvb1MgRrUycLfsrz2gaNT3jYGDKCsPX65yFmdLY4p7Fud0od8Z2M4SEAST2awJkM2X-r~CA922N-N9cnk4kSa6ceyOKiT0xnQqZ1lW9-LrM2H7mfHpEuqT9vrrJvjLpa8WnledgkQ9lftwij3NBWKVy7LOAscx8FF1GE7TQhSNxB0G3X~VY-DDBzNGEhX~IZeuh-4vthjqys5ghUB~le61bxH6dv4otweIrP496Gq9Qs~96uE958q3YEaPikvcVnoN8gzEL~5kA__",
+                    Image.asset(
+                      "assets/images/foodeatupservice.png",
                       width: 124,
                       height: 59,
                       color: Colors.white,

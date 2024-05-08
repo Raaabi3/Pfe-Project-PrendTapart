@@ -7,6 +7,7 @@ class CartProvider extends ChangeNotifier {
   List<Cart> _cartItems = [];
   List<Cart> get cartItems => List.from(_cartItems);
   double total = 0.0;
+  
 
   void updatetotal(newtotal) {
     total = newtotal;
@@ -22,7 +23,7 @@ class CartProvider extends ChangeNotifier {
       final optionItem = item.values.first;
       return optionGroup == group && optionItem == option;
     });
-    cartItem.price -= option.price;
+    cartItem.price -= double.parse(option.price);
     notifyListeners();
   } else {
     print("Cannot remove item because it's required");
@@ -32,11 +33,10 @@ class CartProvider extends ChangeNotifier {
 
   void addItemToCart(product, totalprice, List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>> selectedoptions) {
     Cart cartItem = Cart(
-      productId: product.id,
-      productName: product.name,
+      product: product,
       quantity: 1,
       price: totalprice,
-      img: product.establishmentProducts.isNotEmpty ? product.establishmentProducts[0]['img'] : '',
+      img: product.establishmentProducts.isNotEmpty ? product.establishmentProducts[0]['image'] : '',
       selectedOptionsList: List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>>.from(selectedoptions),
     );
     _cartItems.add(cartItem);
@@ -60,8 +60,8 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateItemQuantity(int productId, int newQuantity) {
-    final index = _cartItems.indexWhere((item) => item.productId == productId);
+  void updateItemQuantity(int product, int newQuantity) {
+    final index = _cartItems.indexWhere((item) => item == product);
     if (index != -1) {
       _cartItems[index].quantity = newQuantity;
       notifyListeners();

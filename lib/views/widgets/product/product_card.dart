@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
-import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/models/product_model/Product.dart';
 import 'package:provider/provider.dart';
 
@@ -17,87 +16,73 @@ class ProductCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
-        children: [
-          Expanded(
-            child: ClipRRect(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20), 
+          border: Border.all(color: Colors.black, width: 2),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipRRect(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+                topLeft: Radius.circular(18),
+                topRight: Radius.circular(18),
               ),
-              child: Image.network(
-                product.img,
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: AutoSizeText(
-                          product.name,
-                          maxLines: 1,
-                          style: subhead.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Text(
-                        product.priceByUnit.toString(),
-                        style: subhead.copyWith(fontWeight: FontWeight.w600),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  Expanded(
-                    child: const Row(
-                      children: [
-                        Icon(Icons.timer_outlined),
-                        Text("10-15 mins")
-                      ],
+                  Container(
+                    height: 250,
+                    width: double.infinity,
+                    child: Image.network(
+                      product.establishmentProducts[0]['image'],
+                      fit: BoxFit.fill,
                     ),
                   ),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  Expanded(
+                  Positioned(
+                    top: 200,
+                    left: 210,
                     child: Container(
-                      height: 35,
-                      width: double.infinity,
+                      padding: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: const Color(0xff3A3244),
-                      ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(
-                            Icons.add,
-                            color: Colors.white,
+                            Icons.timer,
+                            color: Colors.red.shade700,
+                            size: 15,
                           ),
-                          SizedBox(width: 5),
                           Text(
-                            "Ajouter",
-                            //style: body.copyWith(color: Colors.white),
-                          )
+                            "10-15 mins",
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  )
                 ],
               ),
             ),
-          )
-        ],
+            SizedBox(height: 8),
+            AutoSizeText(
+              product.name,
+              maxLines: 1,
+              style:
+                  subhead.copyWith(fontWeight: FontWeight.w700, fontSize: 16),
+            ),
+                        SizedBox(height: 8),
+
+            Text('€' + product.establishmentProducts[0]['price'].toString(),
+                style: subhead.copyWith(
+                    fontFamily: 'poppins',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Colors.grey[600])),
+          ],
+        ),
       ),
     );
   }

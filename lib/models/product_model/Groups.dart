@@ -27,7 +27,7 @@ class EstablishmentProductOptionGroup {
       maximumChoose: json['maximun_choose'] ?? 0,
       type: json['type'] ?? '',
       establishmentId: json['establishment_id'] ?? 0,
-      is_required:json['is_required'] ?? 0,
+      is_required:json['isrequired'] ?? 0,
 options: json['establishmentproductoptions'] != null
         ? List<EstablishmentProductOption>.from(json['establishmentproductoptions'].map((option) => EstablishmentProductOption.fromJson(option)))
         : [],    );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:menu_digitale_tablette/views/pages/plan_de_table/plan_de_table_screen.dart';
 import 'package:pinput/pinput.dart';
+import 'package:side_sheet/side_sheet.dart';
 
 import '../../widgets/parametre/parametre_dialog.dart';
 
@@ -59,7 +61,15 @@ class _CodeDeSecuritePopUpState extends State<CodeDeSecuritePopUp> {
           ),
         ],
       ),
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).pop();
+        SideSheet.right(
+          body: const PlanDeTableScreen(),
+          context: context,
+          width: MediaQuery.of(context).size.width * 0.8,
+        );
+        
+      },
     );
   }
 }

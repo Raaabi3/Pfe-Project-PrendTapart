@@ -1,7 +1,7 @@
 class EstablishmentProductOption {
   final int id;
   final String name;
-  final double price;
+  final String price;
   final int establishmentProductOptionsGroupsId;
 
   EstablishmentProductOption({
@@ -15,7 +15,7 @@ class EstablishmentProductOption {
     return EstablishmentProductOption(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
-      price: json['price'] != null ? double.parse(json['price'].toString()) : 0.0,
+      price: json['price'] != null ? json['price'].toString() : '',
       establishmentProductOptionsGroupsId: json['establishment_product_options_groups_id'] ?? 0,
     );
   }
