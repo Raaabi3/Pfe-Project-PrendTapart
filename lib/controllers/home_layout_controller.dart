@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/historique/history_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 
 import '../views/pages/plan_de_table/plan_de_table_screen.dart';
 import '../views/pages/suivi_commande_et_jeux/suivie_commande_jeux_screen.dart';
@@ -13,6 +12,11 @@ class HomeLayoutController extends ChangeNotifier {
     currentScreenIndex = index;
     notifyListeners();
   }
+
+void resetSelectedCategoryIndex() {
+  currentFoodTypeIndex = -1; 
+  notifyListeners(); // Notify listeners after resetting the index
+}
 
   int currentFoodTypeIndex = 0;
   void switchFoodTypeIndex(int index) {
@@ -33,7 +37,7 @@ class HomeLayoutController extends ChangeNotifier {
       case 4:
         return EstablishmentsScreen();
       case 5:
-      return LoginPage();  
+      return HomeScreen();  
       default:
         return HomeScreen();
     }

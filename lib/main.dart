@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:menu_digitale_tablette/controllers/sondage_controller.dart';
 import 'package:menu_digitale_tablette/controllers/theme_controller.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
@@ -20,49 +21,47 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  
+  const MyApp({Key? key});
+
   @override
   Widget build(BuildContext context) {
-    return ResponsiveSizer(
-      builder: (p0, p1, p2) => MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => HomeLayoutController()),
-          ChangeNotifierProvider(create: (_) => SondageController()),
-          ChangeNotifierProvider(create: (_) => ThemeController()),
-          ChangeNotifierProvider(create: (_) => Auth()),
-          ChangeNotifierProxyProvider<Auth, Establishments>(
-            create: (context) => Establishments()..updateEstablishments(),
-            update: (_, professionalProvider, establishments) =>
-                establishments!
-                  ..updateEstablishments()
-                  ..getdata(professionalProvider.token)
-                  ..getselectedestab(professionalProvider.selectedestablishment),
-          ),
-          ChangeNotifierProxyProvider<Establishments, Products>(
-            create: (context) => Products(),
-            update: (_, establishments, products) => products!
-              /*..updateProducts()*/
-..getdata(establishments.token!),
-          ),
-          ChangeNotifierProvider(create: (_) => CartProvider()),
-          ChangeNotifierProxyProvider<Auth , Commandes>(
-            create: (context) => Commandes(),
-            update:(_,professionalProvider,commandes) => commandes!..getdata(professionalProvider.token!)
-
-          ),
-                    ChangeNotifierProvider(create: (_) => ScreenController()),
-
-
-          
-
-        ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          debugShowCheckedModeBanner: false,
-          home: WelcomeScreen()//LoginPage()//HistoryScreen()//PlanDeTableScreen() //CommandHistoryScreen() TableSelectionScreen()//PinCodeScreen() ,
+    return FlutterSizer(builder: (context, orientation, screenType) {
+      return ResponsiveSizer(
+        builder: (p0, p1, p2) => MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => HomeLayoutController()),
+            ChangeNotifierProvider(create: (_) => SondageController()),
+            ChangeNotifierProvider(create: (_) => ThemeController()),
+            ChangeNotifierProvider(create: (_) => Auth()),
+            ChangeNotifierProxyProvider<Auth, Establishments>(
+              create: (context) => Establishments()..updateEstablishments(),
+              update: (_, professionalProvider, establishments) =>
+                  establishments!
+                    ..getdata(professionalProvider.token)
+                    ..getselectedestab(
+                        professionalProvider.selectedestablishment),
+            ),
+            ChangeNotifierProxyProvider<Establishments, Products>(
+              create: (context) => Products(),
+              update: (_, establishments, products) => products!
+                /*..updateProducts()*/
+                ..getdata(establishments.token!),
+            ),
+            ChangeNotifierProvider(create: (_) => CartProvider()),
+            ChangeNotifierProxyProvider<Auth, Commandes>(
+                create: (context) => Commandes(),
+                update: (_, professionalProvider, commandes) =>
+                    commandes!..getdata(professionalProvider.token!)),
+            ChangeNotifierProvider(create: (_) => ScreenController()),
+          ],
+          child: MaterialApp(
+              title: 'Flutter Demo',
+              debugShowCheckedModeBanner: false,
+              home:
+                  WelcomeScreen() //LoginPage()//HistoryScreen()//PlanDeTableScreen() //CommandHistoryScreen() TableSelectionScreen()//PinCodeScreen() ,
+              ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

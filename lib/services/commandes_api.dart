@@ -15,6 +15,29 @@ Future<http.Response> insertCommande(token ,Map<String, dynamic> bodyData ) asyn
       );
         return response;
       }
+
+Future<http.Response> fetchCommandestatusS(token, id) async {
+  final response = await http.get(
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    },
+    Uri.parse(ApiLinks.getcommandestatus(id)),
+  );
+  return response;
+}
+Future<http.Response> fetchprodstatusS(token, id) async {
+  final response = await http.get(
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    },
+    Uri.parse(ApiLinks.getprodstatus(id)),
+  );
+  return response;
+}
+
+
 Future<http.Response> fetchCommandesS(token) async {
 
       final response = await http.get(

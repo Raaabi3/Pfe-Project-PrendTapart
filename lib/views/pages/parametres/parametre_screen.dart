@@ -4,13 +4,12 @@ import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/historique/history_screen.dart';
-import 'package:menu_digitale_tablette/views/pages/login/login_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/code_de_securite_popup.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/information_resto_popup_.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/parametre_de_table_popup.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/theme_popup.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
-import 'package:menu_digitale_tablette/views/pages/welcome/loginform.dart';
+import 'package:menu_digitale_tablette/views/pages/login/loginform.dart';
 import 'package:menu_digitale_tablette/views/widgets/parametre/parametre_item.dart';
 import 'package:provider/provider.dart';
 

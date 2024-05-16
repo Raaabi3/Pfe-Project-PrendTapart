@@ -21,6 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _filteredProducts = widget.allProducts; 
+    
   }
 
  
@@ -38,6 +39,7 @@ void filterProducts(String query) {
       body: _filteredProducts.isEmpty
           ? Center(
               child: Text('Start typing to search for products'),
+              
             )
           : GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

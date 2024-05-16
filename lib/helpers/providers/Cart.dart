@@ -31,10 +31,10 @@ class CartProvider extends ChangeNotifier {
 }
 
 
-  void addItemToCart(product, totalprice, List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>> selectedoptions) {
+  void addItemToCart(product, totalprice, List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>> selectedoptions,quantite) {
     Cart cartItem = Cart(
       product: product,
-      quantity: 1,
+      quantity: quantite,
       price: totalprice,
       img: product.establishmentProducts.isNotEmpty ? product.establishmentProducts[0]['image'] : '',
       selectedOptionsList: List<Map<EstablishmentProductOptionGroup, EstablishmentProductOption>>.from(selectedoptions),
