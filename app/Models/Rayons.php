@@ -18,4 +18,19 @@ class Rayons extends Model
     {
         return $this->hasMany(Establishment::class , "id");
     }
+    public function establishmentProducts()
+    {
+        return $this->hasMany(EstablishmentProduct::class, 'rayon_id');
+    }
+    public function products()
+    {
+        return $this->hasManyThrough(
+            Product::class,
+            EstablishmentProduct::class,
+            'rayon_id',
+            'id',
+            'id',
+            'product_id'
+        );
+    }
 }

@@ -38,7 +38,7 @@ class Product extends Model
         'marque',
         'origin',
         'adresse',
-        'qte',
+        'qte'  ,
         'hasCover',
         'professional_id',
     ];
