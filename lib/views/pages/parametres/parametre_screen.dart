@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:menu_digitale_tablette/Theme/my_text_styles.dart';
 import 'package:menu_digitale_tablette/controllers/home_layout_controller.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Screens.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/historique/history_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/parametres/code_de_securite_popup.dart';
@@ -36,14 +37,14 @@ class _ParametreScreenState extends State<ParametreScreen> {
     "assets/icons/question-mark-icon.png",
     "assets/icons/logout.png",
     "assets/icons/logout.png"
-
   ];
   bool parametreGeneraleSelected = false;
 
   @override
   Widget build(BuildContext context) {
-    final Auth _provider =
-        Provider.of<Auth>(context);
+    final Auth _provider = Provider.of<Auth>(context);
+    final ScreenController screenProvider =
+        Provider.of<ScreenController>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: [
@@ -119,12 +120,13 @@ class _ParametreScreenState extends State<ParametreScreen> {
                       });
 
                       // index = 1 represents historique
-                    }else if (index == 1) {
-                          Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HistoryScreen()),
-                    );}
+                    } else if (index == 1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HistoryScreen()),
+                      );
+                    }
                     // index = 2 represents Theme parametre
                     else if (index == 2) {
                       showDialog(
@@ -133,6 +135,7 @@ class _ParametreScreenState extends State<ParametreScreen> {
                     } else if (index == 4) {
                       _provider.logout().then((result) {
                         if (result.isRight) {
+                          screenProvider.login();
                           showDialog(
                             context: context,
                             builder: (context) => LoginForm(),
@@ -141,13 +144,13 @@ class _ParametreScreenState extends State<ParametreScreen> {
                           print(result.left);
                         }
                       });
-                    }else if (index == 5) {
-                          Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EstablishmentsScreen()),
-                    );
-                        }
+                    } else if (index == 5) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EstablishmentsScreen()),
+                      );
+                    }
                   },
                   text: itemsNames[index],
                   iconPath: itemsIcons[index]),

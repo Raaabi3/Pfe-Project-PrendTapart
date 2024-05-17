@@ -513,7 +513,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: Consumer<ScreenController>(
                     builder: (context, controller, _) {
-                      if (prodProvider.categories.isEmpty) {
+                      if (!controller.loggedin) {
                         return PlanDeTableScreen();
                       } else if (controller.isCommandeScreenVisible == true) {
                         return CommandesScreen();

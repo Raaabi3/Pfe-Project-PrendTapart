@@ -7,6 +7,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Screens.dart';
 import 'package:menu_digitale_tablette/views/pages/establishment/establishment_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +22,8 @@ class LoginForm extends StatelessWidget {
     final Auth _provider = Provider.of<Auth>(context);
     final Establishments _estabProvider =
         Provider.of<Establishments>(context, listen: false);
+ScreenController screenProvider = Provider.of<ScreenController>(context);
+
 
     return Scaffold(
       body: GestureDetector(
@@ -76,7 +79,7 @@ class LoginForm extends StatelessWidget {
                                     decoration: ShapeDecoration(
                                       image: DecorationImage(
                                         image: AssetImage(
-                                              "assets/images/foodimg1.jpeg"),
+                                            "assets/images/foodimg1.jpeg"),
                                         fit: BoxFit.cover,
                                       ),
                                       shape: RoundedRectangleBorder(
@@ -150,7 +153,8 @@ class LoginForm extends StatelessWidget {
                                                   left: 40.57,
                                                   top: 127.86,
                                                   child: Padding(
-                                                    padding:  EdgeInsets.only(top:30.0),
+                                                    padding: EdgeInsets.only(
+                                                        top: 30.0),
                                                     child: SizedBox(
                                                       width: 326.22,
                                                       height: 61.87,
@@ -167,7 +171,8 @@ class LoginForm extends StatelessWidget {
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 32,
-                                                            fontFamily: 'Poppins',
+                                                            fontFamily:
+                                                                'Poppins',
                                                             fontWeight:
                                                                 FontWeight.w700,
                                                             height: 0.04,
@@ -198,7 +203,8 @@ class LoginForm extends StatelessWidget {
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                             fontSize: 56,
-                                                            fontFamily: 'Poppins',
+                                                            fontFamily:
+                                                                'Poppins',
                                                             fontWeight:
                                                                 FontWeight.w700,
                                                             height: 0.02,
@@ -256,7 +262,6 @@ class LoginForm extends StatelessWidget {
                                   0.6
                                 ]),
                             borderRadius: BorderRadius.circular(20),
-                            
                           ),
                           child: Form(
                             key: _formKey,
@@ -270,12 +275,11 @@ class LoginForm extends StatelessWidget {
                                         Row(
                                           children: [
                                             Container(
-                                              width:12.01388888888889.w ,
+                                              width: 12.01388888888889.w,
                                               height: 5.h,
                                               child: FittedBox(
                                                 fit: BoxFit.contain,
-                                                                                            alignment: Alignment.centerLeft,
-
+                                                alignment: Alignment.centerLeft,
                                                 child: Text(
                                                   "Connexion",
                                                   style: TextStyle(
@@ -290,32 +294,30 @@ class LoginForm extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                    
                                         SizedBox(height: 1.25.h),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 25.694444444444443.w,
-                                          height: 3.3333333333333335.h,
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "Bienvenue dans votre menu digital ",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontFamily: "Poppins",
-                                                fontSize: 21,
-                                                fontWeight: FontWeight.w500,
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 25.694444444444443.w,
+                                              height: 3.3333333333333335.h,
+                                              child: FittedBox(
+                                                fit: BoxFit.contain,
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  "Bienvenue dans votre menu digital ",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 21,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                      ],
-                                    ),
-                                    
                                   ],
                                 ),
                                 SizedBox(height: 5.1042.h),
@@ -324,12 +326,13 @@ class LoginForm extends StatelessWidget {
                                   child: Stack(
                                     children: [
                                       TextFormField(
-                                        textAlignVertical: TextAlignVertical.top,
+                                        textAlignVertical:
+                                            TextAlignVertical.top,
                                         controller: _emailController,
                                         decoration: InputDecoration(
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            ),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                        ),
                                         validator: (value) {
                                           if (value!.isEmpty) {
                                             return 'Please enter your email';
@@ -338,24 +341,28 @@ class LoginForm extends StatelessWidget {
                                         },
                                       ),
                                       Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left:1.3888888888888888.w),
-                                          child: Container(
-                                            width: 3.125.w,
-                                            height: 2.5.h,
-                                            child: FittedBox(
-                                              fit: BoxFit.contain,
-                                              child: Text("Email",style: TextStyle(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 1.3888888888888888.w),
+                                            child: Container(
+                                              width: 3.125.w,
+                                              height: 2.5.h,
+                                              child: FittedBox(
+                                                fit: BoxFit.contain,
+                                                child: Text(
+                                                  "Email",
+                                                  style: TextStyle(
                                                     color: const Color.fromARGB(
                                                         255, 24, 16, 16),
                                                     fontSize: 16,
                                                     fontFamily: 'Poppins',
                                                     fontWeight: FontWeight.w500,
-                                                  ),),
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ))
+                                          ))
                                     ],
                                   ),
                                 ),
@@ -366,18 +373,18 @@ class LoginForm extends StatelessWidget {
                                   child: Stack(
                                     children: [
                                       TextFormField(
-                                        textAlignVertical: TextAlignVertical.top,
+                                        textAlignVertical:
+                                            TextAlignVertical.top,
                                         controller: _passwordController,
                                         obscureText: true,
                                         decoration: InputDecoration(
                                           filled: true,
                                           fillColor: Colors.white,
-                                          
                                           border: UnderlineInputBorder(),
                                         ),
                                         style: TextStyle(
-                                          color:
-                                              const Color.fromARGB(255, 24, 16, 16),
+                                          color: const Color.fromARGB(
+                                              255, 24, 16, 16),
                                           fontFamily: 'Poppins',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -388,28 +395,31 @@ class LoginForm extends StatelessWidget {
                                           return null;
                                         },
                                       ),
-                                       Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left:1.3888888888888888.w),
-                                          child: Container(
-                                            width: 7.5.w,
-                                            height: 2.5.h,
-                                            child: FittedBox(
-                                              fit: BoxFit.contain,
-                                              child: Text("Mot De Passe",style: TextStyle(
+                                      Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 1.3888888888888888.w),
+                                            child: Container(
+                                              width: 7.5.w,
+                                              height: 2.5.h,
+                                              child: FittedBox(
+                                                fit: BoxFit.contain,
+                                                child: Text(
+                                                  "Mot De Passe",
+                                                  style: TextStyle(
                                                     color: const Color.fromARGB(
                                                         255, 24, 16, 16),
                                                     fontSize: 16,
                                                     fontFamily: 'Poppins',
                                                     fontWeight: FontWeight.w500,
-                                                  ),),
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ))
+                                          ))
                                     ],
                                   ),
-                                  
                                 ),
                                 SizedBox(height: 5.4167.h),
                                 Container(
@@ -467,7 +477,8 @@ class LoginForm extends StatelessWidget {
                                       ),
                                     ),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromRGBO(238, 48, 65, 1),
+                                      backgroundColor:
+                                          Color.fromRGBO(238, 48, 65, 1),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),

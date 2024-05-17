@@ -11,6 +11,7 @@ class ScreenController extends ChangeNotifier {
   bool _showtables = false;
   bool _iscommandeContentVisible = false;
   bool _hideTaskbar = false;
+  bool _loggedin = false;
   List<bool> _showAllOptions = [];
   int _currentScreenIndex = 0;
 
@@ -30,8 +31,13 @@ class ScreenController extends ChangeNotifier {
   bool get showtables => _showtables;
   bool get iscommandeContentVisible => _iscommandeContentVisible;
   bool get hideTaskbar => _hideTaskbar;
+  bool get loggedin => _loggedin;
 
 
+void login(){
+  _loggedin = true;
+  notifyListeners();
+}
 void hidetaskbar(bool scrooldirection){
   _hideTaskbar=scrooldirection;
   print("the taskbars"+_hideTaskbar.toString());

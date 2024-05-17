@@ -10,6 +10,8 @@ import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Screens.dart';
 import 'package:menu_digitale_tablette/models/product_model/Product.dart';
 import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/pincode/pinode_screen.dart';
+import 'package:menu_digitale_tablette/views/pages/professional/user_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/welcome/welcome_screen.dart';
 import 'package:menu_digitale_tablette/views/widgets/product/product_list.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +60,7 @@ class MyApp extends StatelessWidget {
               title: 'Flutter Demo',
               debugShowCheckedModeBanner: false,
               home:
-                  WelcomeScreen() //LoginPage()//HistoryScreen()//PlanDeTableScreen() //CommandHistoryScreen() TableSelectionScreen()//PinCodeScreen() ,
+                  PinCodeScreen()//UserScreen()//WelcomeScreen() //LoginPage()//HistoryScreen()//PlanDeTableScreen() //CommandHistoryScreen() TableSelectionScreen()//PinCodeScreen() ,
               ),
         ),
       );

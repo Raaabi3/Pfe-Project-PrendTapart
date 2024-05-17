@@ -6,6 +6,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Auth.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Establishments.dart';
 import 'package:menu_digitale_tablette/helpers/providers/Products.dart';
+import 'package:menu_digitale_tablette/helpers/providers/Screens.dart';
 import 'package:menu_digitale_tablette/models/category_model.dart';
 import 'package:menu_digitale_tablette/views/pages/home/home_screen.dart';
 import 'package:menu_digitale_tablette/views/pages/plan_de_table/Table_welcome_screen.dart';
@@ -22,10 +23,11 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
   Widget build(BuildContext context) {
     final Products prodProvider = Provider.of<Products>(context);
     final Establishments estabProvider = Provider.of<Establishments>(context);
-
+    final ScreenController screenProvider =
+        Provider.of<ScreenController>(context);
     final Auth authProvider = Provider.of<Auth>(context);
     final CarouselController _controller = CarouselController();
-
+    List<Widget> names = [FittedBox(fit: BoxFit.contain, child: Text("amar jmal",style: TextStyle(color: Colors.white, fontSize:120),)),Text("Mohame ali bou nafkha",style: TextStyle(color: Colors.white, fontSize: 20)),Text("7amadi",style: TextStyle(color: Colors.white, fontSize: 20))];
     @override
     void initState() {
       super.initState();
@@ -92,36 +94,31 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                       )
                     ],
                   ),
+                  SizedBox(height: 7.916666666666666.h,),
                   Container(
-                    height: 6.5.h,
-                    width: 93.125.w,
+                    height: 12.5.h,
+                    width: 62.083333333333336.w,
+                    child: CarouselSlider(items: names, options: CarouselOptions(
+                      viewportFraction: 0.23
+                      
 
-                    child: CarouselSlider(items: const [
-                      Text("paul"),
-                      Text("lescient"),
-                      Text("lepaddock")
-                    ], options: CarouselOptions()),
+                    )),
                   ),
                   SizedBox(
                     height: 1.9270833333333335.h,
                   ),
-                  Divider(),
-                  SizedBox(
-                    height: 4.375.h,
-                  ),
-                  Container(
-                    height: 3.229166666666667.h,
-                    width: 25.763888888888886.w,
-                    child: FittedBox(
+                  Stack(children: [
+                    
+                    Divider(),
+                    Center(
+                      child: Container(
+                        height: 2.083333333333333.h,
+                        width: 1.3888888888888888.w,
+                        child: FittedBox(
                         fit: BoxFit.contain,
-                        child: Text(
-                          "Choissisez votre établissement",
-                          style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700),
-                        )),
-                  ),
+                        child: Icon(Icons.circle_rounded,color: Colors.white,size: 20,))),
+                    )]),
+                 
                   SizedBox(
                     height: 4.583333333333333.h,
                   ),
@@ -132,23 +129,7 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                             child: Container(
                               child: Column(
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      ...Iterable<int>.generate(estabProvider
-                                              .establishments.length)
-                                          .map(
-                                        (int pageIndex) => Flexible(
-                                          child: ElevatedButton(
-                                            onPressed: () => _controller
-                                                .animateToPage(pageIndex),
-                                            child: Text("$pageIndex"),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  
                                   Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -198,26 +179,13 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                                                               .establishments[
                                                                   index]
                                                               .id);
-                                                  if (prodProvider
-                                                      .categories.isNotEmpty) {
-                                                    print(
-                                                        'Navigating to HomeScreen');
-                                                    Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            WelcomeScreen(),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Tablewelcome(),
-                                                      ),
-                                                    );
-                                                  }
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Tablewelcome(),
+                                                    ),
+                                                  );
                                                 },
                                                 child: Column(
                                                   children: [
@@ -295,20 +263,27 @@ class _EstablishmentsScreenState extends State<EstablishmentsScreen> {
                                           ),
                                         ),
                                       ]),
-SizedBox(height: 2.7083333333333335.h,),
+                                  SizedBox(
+                                    height: 2.7083333333333335.h,
+                                  ),
                                   Container(
-                                    height:10.h,
+                                    height: 10.h,
                                     child: FittedBox(
                                       fit: BoxFit.contain,
                                       child: Container(
                                         width: 18.291666666666668.w,
-                                        child: Text("Lorem ipsum dolor sit amet consectetur. Bibendum nunc pellentesque in tincidunt tortor auctor tellus congue neque. "
-                                        ,style: TextStyle(color: Colors.white,fontSize: 16),
+                                        child: Text(
+                                          "Lorem ipsum dolor sit amet consectetur. Bibendum nunc pellentesque in tincidunt tortor auctor tellus congue neque. ",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 5.208333333333334.h,),
+                                  SizedBox(
+                                    height: 5.208333333333334.h,
+                                  ),
                                   Container(
                                     height: 6.5625.h,
                                     width: 25.w,
